@@ -12,6 +12,8 @@ import {
 import { BlurView } from 'expo-blur';
 import { authStyles } from '../../style.js';
 import useNavigation from '../hooks/useNavigation.js';
+import { useDispatch } from 'react-redux';
+import { signUpUser } from '../store/userThunks.js';
 
 const SignUp = ({ navigation }) => {
 	const [email, setEmail] = useState('');
@@ -19,8 +21,12 @@ const SignUp = ({ navigation }) => {
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
 	const navHookFunctions = useNavigation({ navigation });
+	const dispatch = useDispatch();
 
-	const handleLogin = () => {};
+	const handleLogin = () => {
+		let name = `${firstName} ${lastName}`;
+		dispatch(signUpUser({ email, password, name, dateOfBirth: '05/12/1997' }));
+	};
 
 	return (
 		<KeyboardAvoidingView
@@ -70,7 +76,7 @@ const SignUp = ({ navigation }) => {
 					<TouchableOpacity
 						style={authStyles.button}
 						onPress={() => {
-							return 0;
+							handleLogin();
 						}}
 					>
 						<Text style={authStyles.buttonText}>Sign Up</Text>
