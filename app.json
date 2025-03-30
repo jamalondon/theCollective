@@ -1,8 +1,14 @@
 {
   "expo": {
     "name": "theCollective",
-    "slug": "theCollective",
+    "slug": "thecollective",
     "version": "1.0.0",
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "extra": {
+      "eas": {
+        "projectId": "d7637a68-3704-4b84-a355-c39f8eb21e3d"
+      }
+    },
+    "owner": "jamalondon97"
   }
 }
