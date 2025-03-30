@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Home = () => {
+const MeetTheTeam = () => {
 	const insets = useSafeAreaInsets();
 
 	return (
@@ -14,9 +14,9 @@ const Home = () => {
 				paddingRight: insets.right,
 			}}
 		>
-			<Text>Home Screen</Text>
+			<Text>Meet The Team</Text>
 		</View>
 	);
 };
 
-export default Home;
+export default MeetTheTeam;

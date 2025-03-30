@@ -10,15 +10,25 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { authStyles } from '../../style.js';
-import useNavigation from '../hooks/useNavigation.js';
+import * as RootNavigation from '../navigation/navigationRef.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { signInUser } from '../store/userThunks.js';
+import { clearError } from '../store/userSlice.js';
 
 const SignIn = ({ navigation }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const navHookFunctions = useNavigation({ navigation });
+
+	//redux state selectors
+	const errorMessage = useSelector((state) => state.user.errorMessage);
+
+	//redux dispatch function
+	const dispatch = useDispatch();
 
 	//for button presses
-	const handleLogin = () => {};
+	const handleLogin = () => {
+		dispatch(signInUser({ email, password }));
+	};
 
 	return (
 		<KeyboardAvoidingView
@@ -52,18 +62,26 @@ const SignIn = ({ navigation }) => {
 					<TouchableOpacity
 						style={authStyles.button}
 						onPress={() => {
-							return 0;
+							handleLogin();
 						}}
 					>
 						<Text style={authStyles.buttonText}>Sign In</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => navHookFunctions.clearNavigation('SignUp')}
+						onPress={() => {
+							dispatch(clearError());
+							RootNavigation.navigate('SignUp');
+						}}
 					>
 						<Text style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
 							New Member? Sign Up
 						</Text>
 					</TouchableOpacity>
+					{errorMessage ? (
+						<Text style={{ color: 'red', marginTop: 10 }}>{errorMessage}</Text>
+					) : (
+						''
+					)}
 				</BlurView>
 			</ImageBackground>
 		</KeyboardAvoidingView>

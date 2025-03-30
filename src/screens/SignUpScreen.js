@@ -11,18 +11,28 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { authStyles } from '../../style.js';
-import useNavigation from '../hooks/useNavigation.js';
-import { useDispatch } from 'react-redux';
+import * as RootNavigation from '../navigation/navigationRef.js';
+import { useDispatch, useSelector } from 'react-redux';
 import { signUpUser } from '../store/userThunks.js';
+import { clearError } from '../store/userSlice.js';
 
 const SignUp = ({ navigation }) => {
+	//state variables for the email, password, first name, and last name
+	// These are used to store the values of the text inputs
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
-	const navHookFunctions = useNavigation({ navigation });
+
+	//redux state selectors
+	const errorMessage = useSelector((state) => state.user.errorMessage);
+
+	//redux dispatch function
+	// This is used to dispatch actions to the redux store
 	const dispatch = useDispatch();
 
+	//called when the submit button is pressed
+	// Dispatches the signUpUser thunk with the email, password, and name
 	const handleLogin = () => {
 		let name = `${firstName} ${lastName}`;
 		dispatch(signUpUser({ email, password, name, dateOfBirth: '05/12/1997' }));
@@ -82,12 +92,20 @@ const SignUp = ({ navigation }) => {
 						<Text style={authStyles.buttonText}>Sign Up</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						onPress={() => navHookFunctions.clearNavigation('SignIn')}
+						onPress={() => {
+							dispatch(clearError());
+							RootNavigation.navigate('SignIn');
+						}}
 					>
 						<Text style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
 							Already a member? Sign In
 						</Text>
 					</TouchableOpacity>
+					{errorMessage ? (
+						<Text style={{ color: 'red', marginTop: 10 }}>{errorMessage}</Text>
+					) : (
+						''
+					)}
 				</BlurView>
 			</ImageBackground>
 		</KeyboardAvoidingView>

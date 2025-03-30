@@ -40,13 +40,11 @@ export const signUpUser = createAsyncThunk(
 // Sign In Thunk
 export const signInUser = createAsyncThunk(
 	'user/signIn',
-	async ({ email, password, name, dateOfBirth }, { rejectWithValue }) => {
+	async ({ email, password }, { rejectWithValue }) => {
 		try {
 			const response = await ServerAPI.post('/auth/signin', {
 				email,
 				password,
-				name,
-				dateOfBirth,
 			});
 
 			// Store token in AsyncStorage for persistence
@@ -59,9 +57,9 @@ export const signInUser = createAsyncThunk(
 			return {
 				token: response.data.token,
 				email,
-				name,
+				name: response.data.name || '',
 				userID: response.data.userID || '',
-				dateOfBirth,
+				dateOfBirth: response.data.dateOfBirth || '',
 			};
 		} catch (error) {
 			return rejectWithValue(error.message || 'Network error');
@@ -75,10 +73,6 @@ export const tryLocalSignIn = createAsyncThunk(
 	async (_, { rejectWithValue }) => {
 		try {
 			const token = await AsyncStorage.getItem('token');
-
-			if (!token) {
-				return rejectWithValue('No token found');
-			}
 
 			// Here you would typically validate the token with your backend
 			// For now, we'll just return the token

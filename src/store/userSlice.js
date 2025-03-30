@@ -21,6 +21,7 @@ const userSlice = createSlice({
 			darkMode: false,
 			notifications: true,
 		},
+		dateOfBirth: '',
 	},
 	reducers: {
 		// Actions that modify state
@@ -36,10 +37,13 @@ const userSlice = createSlice({
 			state.errorMessage = '';
 		});
 		builder.addCase(signInUser.fulfilled, (state, action) => {
+			state.errorMessage = '';
 			state.token = action.payload.token;
 			state.email = action.payload.email;
 			state.userID = action.payload.userID || '';
-			state.errorMessage = '';
+			state.name = action.payload.name;
+			state.dateOfBirth = action.payload.dateOfBirth || '';
+			console.log(action.payload.token);
 		});
 		builder.addCase(signInUser.rejected, (state, action) => {
 			state.errorMessage = action.payload || 'Sign in failed';
@@ -82,8 +86,7 @@ const userSlice = createSlice({
 });
 
 // Export actions
-export const { signIn, signUp, signOut, localSignIn, clearError } =
-	userSlice.actions;
+export const { clearError } = userSlice.actions;
 
 // Export reducer
 export default userSlice.reducer;
