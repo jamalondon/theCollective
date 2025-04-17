@@ -14,7 +14,7 @@ const Sermons = () => {
 				paddingRight: insets.right,
 			}}
 		>
-			<Text>Sermons Screen</Text>
+			<Text>Sermons Screens</Text>
 		</View>
 	);
 };

@@ -1,27 +1,56 @@
-import React, { useEffect, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { tryLocalSignIn } from '../store/userThunks.js';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { useDispatch } from 'react-redux';
+import {
+	getAllEvents,
+	getMyEvents,
+	getAttendingEvents,
+} from '../store/eventThunk';
 import * as RootNavigation from '../navigation/navigationRef';
 
-const LockScreen = () => {
-	//redux dispatch function
+const LoadingScreen = () => {
 	const dispatch = useDispatch();
-	//redux state selectors
-	const token = useSelector((state) => state.user.token);
+
+	// Function to fetch all event data
+	const fetchEventData = async () => {
+		try {
+			await Promise.all([
+				dispatch(getAllEvents()),
+				dispatch(getMyEvents()),
+				dispatch(getAttendingEvents()),
+			]);
+			// After all data is loaded, navigate to the main app
+			RootNavigation.navigate('App');
+		} catch (error) {
+			console.error('Error loading data:', error);
+			// Handle error appropriately
+		}
+	};
 
 	useEffect(() => {
-		dispatch(tryLocalSignIn());
+		fetchEventData();
 	}, []);
 
-	useEffect(() => {
-		// This will only run when the token value changes
-		if (token) {
-			RootNavigation.navigate('App');
-		} else {
-			RootNavigation.navigate('Auth');
-		}
-	}, [token]);
+	return (
+		<View style={styles.container}>
+			<ActivityIndicator size="large" color="#0000ff" />
+			<Text style={styles.text}>Loading your events...</Text>
+		</View>
+	);
 };
 
-export default LockScreen;
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: '#FFFFFF',
+	},
+	text: {
+		marginTop: 10,
+		fontSize: 16,
+		color: '#666',
+	},
+});
+
+export default LoadingScreen;

@@ -1,4 +1,4 @@
-package com.thecollective
+package com.jamalondon97.thecollective
 
 import android.app.Application
 import android.content.res.Configuration

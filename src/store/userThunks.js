@@ -3,21 +3,42 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ServerAPI from '../API/ServerAPI';
 import * as RootNavigation from '../navigation/navigationRef';
+import { getAllEvents, getMyEvents, getAttendingEvents } from './eventThunk';
 
 // Sign Up Thunk
 export const signUpUser = createAsyncThunk(
 	'user/signUp',
-	async ({ email, password, name, dateOfBirth }, { rejectWithValue }) => {
+	async (
+		{ email, password, name, dateOfBirth },
+		{ rejectWithValue, dispatch }
+	) => {
 		try {
+			// Validate input
+			if (!email || !password || !name) {
+				throw new Error('Email, password, and name are required');
+			}
 			const response = await ServerAPI.post('/auth/signup', {
 				email,
 				password,
 				name,
 				dateOfBirth,
 			});
+			console.log('email, password, name, dateOfBirth');
+
+			// Validate response
+			if (!response.data || !response.data.token) {
+				throw new Error('Invalid server response - missing token');
+			}
 
 			// Store token in AsyncStorage for persistence
 			await AsyncStorage.setItem('token', response.data.token);
+
+			// Fetch initial event data
+			await Promise.all([
+				dispatch(getAllEvents()),
+				dispatch(getMyEvents()),
+				dispatch(getAttendingEvents()),
+			]);
 
 			// Navigate to the home screen
 			RootNavigation.navigate('App');
@@ -31,8 +52,19 @@ export const signUpUser = createAsyncThunk(
 				dateOfBirth,
 			};
 		} catch (error) {
-			console.error('Error:', error);
-			return rejectWithValue(error.message || 'Network error');
+			if (error.response) {
+				// The request was made and the server responded with a status code
+				// that falls out of the range of 2xx
+				return rejectWithValue(
+					error.response.data?.message || 'Server error occurred'
+				);
+			} else if (error.request) {
+				// The request was made but no response was received
+				return rejectWithValue('No response from server');
+			} else {
+				// Something happened in setting up the request that triggered an Error
+				return rejectWithValue(error.message);
+			}
 		}
 	}
 );
@@ -40,15 +72,26 @@ export const signUpUser = createAsyncThunk(
 // Sign In Thunk
 export const signInUser = createAsyncThunk(
 	'user/signIn',
-	async ({ email, password }, { rejectWithValue }) => {
+	async ({ email, password }, { rejectWithValue, dispatch }) => {
 		try {
 			const response = await ServerAPI.post('/auth/signin', {
 				email,
 				password,
 			});
 
+			if (!response.data || !response.data.token) {
+				throw new Error('Invalid server response - missing token');
+			}
+
 			// Store token in AsyncStorage for persistence
 			await AsyncStorage.setItem('token', response.data.token);
+
+			// Fetch initial event data
+			await Promise.all([
+				dispatch(getAllEvents()),
+				dispatch(getMyEvents()),
+				dispatch(getAttendingEvents()),
+			]);
 
 			// Navigate to the home screen
 			RootNavigation.navigate('App');
@@ -62,7 +105,15 @@ export const signInUser = createAsyncThunk(
 				dateOfBirth: response.data.dateOfBirth || '',
 			};
 		} catch (error) {
-			return rejectWithValue(error.message || 'Network error');
+			if (error.response) {
+				return rejectWithValue(
+					error.response.data?.message || 'Server error occurred'
+				);
+			} else if (error.request) {
+				return rejectWithValue('No response from server');
+			} else {
+				return rejectWithValue(error.message);
+			}
 		}
 	}
 );
@@ -70,12 +121,20 @@ export const signInUser = createAsyncThunk(
 // Try Auto Sign In from stored token
 export const tryLocalSignIn = createAsyncThunk(
 	'user/localSignIn',
-	async (_, { rejectWithValue }) => {
+	async (_, { rejectWithValue, dispatch }) => {
 		try {
 			const token = await AsyncStorage.getItem('token');
 
-			// Here you would typically validate the token with your backend
-			// For now, we'll just return the token
+			if (!token) {
+				return { token: null };
+			}
+
+			try {
+				await dispatch(getAllEvents());
+			} catch (error) {
+				// Continue even if events fetch fails
+			}
+
 			return { token };
 		} catch (error) {
 			return rejectWithValue(error.message || 'Failed to restore session');

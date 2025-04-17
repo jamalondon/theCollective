@@ -1,5 +1,17 @@
 // src/store/eventsSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import {
+	getAllEvents,
+	getMyEvents,
+	getAttendingEvents,
+	createEvent,
+	updateEvent as updateEventThunk,
+	deleteEvent as deleteEventThunk,
+	attendEvent,
+	cancelAttendance,
+	searchUsers,
+	searchLocations,
+} from './eventThunk';
 
 const eventsSlice = createSlice({
 	name: 'events',
@@ -9,6 +21,7 @@ const eventsSlice = createSlice({
 		attendingEvents: [], // Events the current user is attending
 		featuredEvents: [], // Events to highlight on the home page
 		selectedEvent: null, // Currently selected event for detailed view
+		searchResults: [], // Results from user or location search
 		isLoading: false,
 		error: null,
 		filters: {
@@ -22,170 +35,6 @@ const eventsSlice = createSlice({
 		},
 	},
 	reducers: {
-		// Set all events (from API)
-		setAllEvents: (state, action) => {
-			state.allEvents = action.payload;
-		},
-
-		// Set events created by user
-		setMyEvents: (state, action) => {
-			state.myEvents = action.payload;
-		},
-
-		// Set events user is attending
-		setAttendingEvents: (state, action) => {
-			state.attendingEvents = action.payload;
-		},
-
-		// Set featured events for home page
-		setFeaturedEvents: (state, action) => {
-			state.featuredEvents = action.payload;
-		},
-
-		// Select a specific event for detailed view
-		selectEvent: (state, action) => {
-			state.selectedEvent = action.payload;
-		},
-
-		// Clear selected event
-		clearSelectedEvent: (state) => {
-			state.selectedEvent = null;
-		},
-
-		// Create a new event (by current user)
-		createEvent: (state, action) => {
-			const newEvent = {
-				...action.payload,
-				creatorId: action.payload.creatorId, // Make sure creator ID is included
-				attendees: [action.payload.creatorId], // Creator automatically attends
-				createdAt: new Date().toISOString(),
-			};
-
-			// Add to both all events and my events
-			state.allEvents.push(newEvent);
-			state.myEvents.push(newEvent);
-		},
-
-		// Update an existing event
-		updateEvent: (state, action) => {
-			const updatedEvent = action.payload;
-
-			// Update in allEvents
-			const allIndex = state.allEvents.findIndex(
-				(event) => event.id === updatedEvent.id
-			);
-			if (allIndex !== -1) {
-				state.allEvents[allIndex] = updatedEvent;
-			}
-
-			// Update in myEvents if present
-			const myIndex = state.myEvents.findIndex(
-				(event) => event.id === updatedEvent.id
-			);
-			if (myIndex !== -1) {
-				state.myEvents[myIndex] = updatedEvent;
-			}
-
-			// Update in attendingEvents if present
-			const attendingIndex = state.attendingEvents.findIndex(
-				(event) => event.id === updatedEvent.id
-			);
-			if (attendingIndex !== -1) {
-				state.attendingEvents[attendingIndex] = updatedEvent;
-			}
-
-			// Update in featuredEvents if present
-			const featuredIndex = state.featuredEvents.findIndex(
-				(event) => event.id === updatedEvent.id
-			);
-			if (featuredIndex !== -1) {
-				state.featuredEvents[featuredIndex] = updatedEvent;
-			}
-
-			// Update selected event if this is the one selected
-			if (state.selectedEvent && state.selectedEvent.id === updatedEvent.id) {
-				state.selectedEvent = updatedEvent;
-			}
-		},
-
-		// Delete an event
-		deleteEvent: (state, action) => {
-			const eventId = action.payload;
-
-			// Remove from all event arrays
-			state.allEvents = state.allEvents.filter((event) => event.id !== eventId);
-			state.myEvents = state.myEvents.filter((event) => event.id !== eventId);
-			state.attendingEvents = state.attendingEvents.filter(
-				(event) => event.id !== eventId
-			);
-			state.featuredEvents = state.featuredEvents.filter(
-				(event) => event.id !== eventId
-			);
-
-			// Clear selected event if this was the one selected
-			if (state.selectedEvent && state.selectedEvent.id === eventId) {
-				state.selectedEvent = null;
-			}
-		},
-
-		// User joins an event (current user is attending)
-		joinEvent: (state, action) => {
-			const { eventId, userId } = action.payload;
-
-			// Find the event in allEvents
-			const event = state.allEvents.find((e) => e.id === eventId);
-			if (event) {
-				// Initialize attendees array if needed
-				if (!event.attendees) {
-					event.attendees = [];
-				}
-
-				// Add user if not already in attendees
-				if (!event.attendees.includes(userId)) {
-					event.attendees.push(userId);
-				}
-
-				// Add to user's attending events if not already there
-				const isAlreadyAttending = state.attendingEvents.some(
-					(e) => e.id === eventId
-				);
-				if (!isAlreadyAttending) {
-					state.attendingEvents.push(event);
-				}
-			}
-		},
-
-		// User leaves an event (current user stops attending)
-		leaveEvent: (state, action) => {
-			const { eventId, userId } = action.payload;
-
-			// Find and update the event in allEvents
-			const event = state.allEvents.find((e) => e.id === eventId);
-			if (event && event.attendees) {
-				event.attendees = event.attendees.filter((id) => id !== userId);
-			}
-
-			// Remove from user's attending events
-			state.attendingEvents = state.attendingEvents.filter(
-				(e) => e.id !== eventId
-			);
-		},
-
-		// Toggle loading state
-		setLoading: (state, action) => {
-			state.isLoading = action.payload;
-		},
-
-		// Set error message
-		setError: (state, action) => {
-			state.error = action.payload;
-		},
-
-		// Update filters
-		updateFilters: (state, action) => {
-			state.filters = { ...state.filters, ...action.payload };
-		},
-
 		// Reset filters to default
 		resetFilters: (state) => {
 			state.filters = {
@@ -198,27 +47,172 @@ const eventsSlice = createSlice({
 				sortBy: 'date',
 			};
 		},
+		// Select a specific event for detailed view
+		selectEvent: (state, action) => {
+			state.selectedEvent = action.payload;
+		},
+		// Clear selected event
+		clearSelectedEvent: (state) => {
+			state.selectedEvent = null;
+		},
+	},
+	extraReducers: (builder) => {
+		// Get All Events
+		builder.addCase(getAllEvents.pending, (state) => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(getAllEvents.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.allEvents = action.payload;
+			state.error = null;
+		});
+		builder.addCase(getAllEvents.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.payload;
+		});
+
+		// Get My Events
+		builder.addCase(getMyEvents.pending, (state) => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(getMyEvents.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.myEvents = action.payload;
+			state.error = null;
+		});
+		builder.addCase(getMyEvents.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.payload;
+		});
+
+		// Get Attending Events
+		builder.addCase(getAttendingEvents.pending, (state) => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(getAttendingEvents.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.attendingEvents = action.payload;
+			state.error = null;
+		});
+		builder.addCase(getAttendingEvents.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.payload;
+		});
+
+		// Create Event
+		builder.addCase(createEvent.pending, (state) => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(createEvent.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.allEvents.push(action.payload);
+			state.myEvents.push(action.payload);
+			state.error = null;
+		});
+		builder.addCase(createEvent.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.payload;
+		});
+
+		// Update Event
+		builder.addCase(updateEventThunk.fulfilled, (state, action) => {
+			const updatedEvent = action.payload;
+			state.allEvents = state.allEvents.map((event) =>
+				event.id === updatedEvent.id ? updatedEvent : event
+			);
+			state.myEvents = state.myEvents.map((event) =>
+				event.id === updatedEvent.id ? updatedEvent : event
+			);
+			state.attendingEvents = state.attendingEvents.map((event) =>
+				event.id === updatedEvent.id ? updatedEvent : event
+			);
+			if (state.selectedEvent?.id === updatedEvent.id) {
+				state.selectedEvent = updatedEvent;
+			}
+		});
+
+		// Delete Event
+		builder.addCase(deleteEventThunk.fulfilled, (state, action) => {
+			const deletedEventId = action.payload;
+			state.allEvents = state.allEvents.filter(
+				(event) => event.id !== deletedEventId
+			);
+			state.myEvents = state.myEvents.filter(
+				(event) => event.id !== deletedEventId
+			);
+			state.attendingEvents = state.attendingEvents.filter(
+				(event) => event.id !== deletedEventId
+			);
+			if (state.selectedEvent?.id === deletedEventId) {
+				state.selectedEvent = null;
+			}
+		});
+
+		// Attend Event
+		builder.addCase(attendEvent.fulfilled, (state, action) => {
+			const updatedEvent = action.payload;
+			state.allEvents = state.allEvents.map((event) =>
+				event.id === updatedEvent.id ? updatedEvent : event
+			);
+			if (
+				!state.attendingEvents.find((event) => event.id === updatedEvent.id)
+			) {
+				state.attendingEvents.push(updatedEvent);
+			}
+		});
+
+		// Cancel Attendance
+		builder.addCase(cancelAttendance.fulfilled, (state, action) => {
+			const updatedEvent = action.payload;
+			state.allEvents = state.allEvents.map((event) =>
+				event.id === updatedEvent.id ? updatedEvent : event
+			);
+			state.attendingEvents = state.attendingEvents.filter(
+				(event) => event.id !== updatedEvent.id
+			);
+		});
+
+		// Search Users
+		builder.addCase(searchUsers.pending, (state) => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(searchUsers.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.searchResults = action.payload;
+			state.error = null;
+		});
+		builder.addCase(searchUsers.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.payload;
+			state.searchResults = [];
+		});
+
+		// Search Locations
+		builder.addCase(searchLocations.pending, (state) => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(searchLocations.fulfilled, (state, action) => {
+			state.isLoading = false;
+			state.searchResults = action.payload;
+			state.error = null;
+		});
+		builder.addCase(searchLocations.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.payload;
+			state.searchResults = [];
+		});
 	},
 });
 
 // Export actions
-export const {
-	setAllEvents,
-	setMyEvents,
-	setAttendingEvents,
-	setFeaturedEvents,
-	selectEvent,
-	clearSelectedEvent,
-	createEvent,
-	updateEvent,
-	deleteEvent,
-	joinEvent,
-	leaveEvent,
-	setLoading,
-	setError,
-	updateFilters,
-	resetFilters,
-} = eventsSlice.actions;
+export const { resetFilters, selectEvent, clearSelectedEvent } =
+	eventsSlice.actions;
 
 // Export reducer
 export default eventsSlice.reducer;

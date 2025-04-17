@@ -1,215 +1,323 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	View,
 	Text,
-	TextInput,
 	TouchableOpacity,
-	StyleSheet,
 	ScrollView,
 	Platform,
-	Alert,
 	KeyboardAvoidingView,
+	Animated,
+	Alert,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
+import CustomDatePicker from '../components/CustomDatePicker';
+import CustomTimePicker from '../components/CustomTimePicker';
 
-const CreateEventScreen = ({ navigation, visible }) => {
-	// Used for safe area on the screen (notches, native UI elements, etc.)
+import CreateEventBasicInfo from '../components/CreateEventBasicInfo';
+import CreateEventLocationTime from '../components/CreateEventLocationTime';
+import CreateEventDetailsAttendees from '../components/CreateEventDetailsAttendees';
+import CreateEventPreview from '../components/CreateEventPreview';
+import { createEventStyles } from '../constants/style.js';
+import { useCreateEventAnimations } from '../animations/createEventAnimations';
+import { createEvent } from '../store/eventThunk';
+
+const popularLocations = [
+	{ id: '1', name: 'Los Angeles', subtitle: 'California, United States' },
+	{ id: '2', name: 'San Francisco', subtitle: 'California, United States' },
+];
+
+const CreateEventScreen = ({ navigation }) => {
+	const dispatch = useDispatch();
+	const { loading, error } = useSelector((state) => state.events);
 	const insets = useSafeAreaInsets();
-
-	// State for form fields
-	const [eventName, setEventName] = useState('');
+	const [currentStep, setCurrentStep] = useState(1);
+	const [eventTitle, setEventTitle] = useState('');
+	const [selectedTags, setSelectedTags] = useState([]);
+	const [nameError, setNameError] = useState('');
 	const [eventDate, setEventDate] = useState(new Date());
 	const [eventLocation, setEventLocation] = useState('');
 	const [eventDescription, setEventDescription] = useState('');
-	const [attendees, setAttendees] = useState('');
+	const [attendees, setAttendees] = useState([]);
+	const [searchQuery, setSearchQuery] = useState('');
 
-	// State for date/time picker visibility
+	// State for modal visibility
 	const [showDatePicker, setShowDatePicker] = useState(false);
+	const [showTimePicker, setShowTimePicker] = useState(false);
+	const [focusedInput, setFocusedInput] = useState(null);
 
-	// Form validation
-	const validateForm = () => {
-		if (!eventName.trim()) {
-			Alert.alert('Error', 'Event name is required');
-			return false;
-		}
-		if (!eventLocation.trim()) {
-			Alert.alert('Error', 'Location is required');
-			return false;
-		}
-		return true;
+	// Get animations
+	const {
+		progressAnim,
+		errorShakeAnim,
+		buttonScaleAnim,
+		animateProgress,
+		shakeError,
+		handleButtonPressIn,
+		handleButtonPressOut,
+	} = useCreateEventAnimations();
+
+	useEffect(() => {
+		animateProgress(currentStep);
+	}, [currentStep]);
+
+	const handleTagPress = (tagId) => {
+		console.log('tagId', tagId);
+		setSelectedTags((prevTags) =>
+			prevTags.includes(tagId)
+				? prevTags.filter((id) => id !== tagId)
+				: [...prevTags, tagId]
+		);
 	};
 
-	// Handle date change
-	const onDateChange = (event, selectedDate) => {
-		const currentDate = selectedDate || eventDate;
-		setShowDatePicker(Platform.OS === 'ios');
-		setEventDate(currentDate);
+	const handleDateSelect = (date) => {
+		const newDate = new Date(eventDate);
+		newDate.setFullYear(date.getFullYear());
+		newDate.setMonth(date.getMonth());
+		newDate.setDate(date.getDate());
+		console.log('newDate', newDate);
+		setEventDate(newDate);
+		setShowDatePicker(false);
+		setShowTimePicker(true);
 	};
 
-	// Handle form submission
-	const handleCreateEvent = () => {
-		if (validateForm()) {
-			// Create event object
-			const newEvent = {
-				name: eventName,
-				date: eventDate,
-				location: eventLocation,
-				description: eventDescription,
-				attendees: attendees.split(',').map((email) => email.trim()),
-			};
+	const handleTimeSelect = (date) => {
+		const newDate = new Date(eventDate);
+		newDate.setHours(date.getHours());
+		newDate.setMinutes(date.getMinutes());
+		setEventDate(newDate);
+		setShowTimePicker(false);
+	};
 
-			// Here you would typically save the event to your state management or backend
-			console.log('Creating event:', newEvent);
+	const handleCreateEvent = async () => {
+		const eventPayload = {
+			title: eventTitle,
+			tags: selectedTags,
+			date: eventDate.toISOString(),
+			location: eventLocation,
+			description: eventDescription,
+			attendees: attendees.map((user) => user.id), // Assuming attendees have an id field
+		};
 
-			// Navigate back or to event details
+		try {
+			await dispatch(createEvent(eventPayload)).unwrap();
+			Alert.alert('Success', 'Event created successfully!');
 			navigation.goBack();
-			// Or: navigation.navigate('EventDetails', { eventId: newEventId });
+		} catch (error) {
+			Alert.alert('Error', error.message || 'Failed to create event');
+		}
+	};
+
+	const validateAndProceed = () => {
+		if (currentStep === 1) {
+			if (!eventTitle.trim() || selectedTags.length === 0) {
+				shakeError();
+				setNameError(
+					!eventTitle.trim()
+						? 'Please enter an event name'
+						: 'Please select at least one tag'
+				);
+				return;
+			}
+			setNameError('');
+			setCurrentStep(2);
+		} else if (currentStep === 2) {
+			if (!eventLocation.trim()) {
+				shakeError();
+				setNameError('Please enter a location');
+				return;
+			}
+			setNameError('');
+			setCurrentStep(3);
+		} else if (currentStep === 3) {
+			if (!eventDescription.trim()) {
+				shakeError();
+				setNameError('Please enter an event description');
+				return;
+			}
+			setNameError('');
+			setCurrentStep(4);
+		} else {
+			handleCreateEvent();
+		}
+	};
+
+	const handleBack = () => {
+		if (currentStep === 1) {
+			navigation.goBack();
+		} else {
+			setCurrentStep(currentStep - 1);
+		}
+	};
+
+	const getStepTitle = () => {
+		switch (currentStep) {
+			case 1:
+				return 'Create New Event';
+			case 2:
+				return 'When & Where';
+			case 3:
+				return 'What & Who';
+			case 4:
+				return 'Preview Event';
+			default:
+				return '';
+		}
+	};
+
+	const getStepSubtitle = () => {
+		switch (currentStep) {
+			case 1:
+				return "Let's start with the basics";
+			case 2:
+				return 'Set your event location and time';
+			case 3:
+				return 'Add description and invite people';
+			case 4:
+				return 'Review your event details';
+			default:
+				return '';
 		}
 	};
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-			style={{ flex: 1 }}
-		>
-			<ScrollView
-				style={[
-					styles.container,
-					{
-						paddingTop: insets.top,
-						paddingBottom: insets.bottom,
-						paddingLeft: insets.left,
-						paddingRight: insets.right,
-					},
-				]}
+		<View style={createEventStyles.mainContainer}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+				style={createEventStyles.flex}
 			>
-				<Text style={styles.headerText}>Create New Event</Text>
-
-				<View style={styles.inputGroup}>
-					<Text style={styles.label}>Event Name *</Text>
-					<TextInput
-						style={styles.input}
-						value={eventName}
-						onChangeText={setEventName}
-						placeholder="Enter event name"
-					/>
-				</View>
-
-				<View style={styles.inputGroup}>
-					<Text style={styles.label}>Date and Time *</Text>
-					<TouchableOpacity
-						style={styles.dateButton}
-						onPress={() => setShowDatePicker(true)}
-					>
-						<Text>{eventDate.toLocaleString()}</Text>
-					</TouchableOpacity>
-
-					{showDatePicker && (
-						<DateTimePicker
-							value={eventDate}
-							mode="datetime"
-							display="default"
-							onChange={onDateChange}
-						/>
-					)}
-				</View>
-
-				<View style={styles.inputGroup}>
-					<Text style={styles.label}>Location *</Text>
-					<TextInput
-						style={styles.input}
-						value={eventLocation}
-						onChangeText={setEventLocation}
-						placeholder="Enter event location"
-					/>
-				</View>
-
-				<View style={styles.inputGroup}>
-					<Text style={styles.label}>Description</Text>
-					<TextInput
-						style={[styles.input, styles.textArea]}
-						value={eventDescription}
-						onChangeText={setEventDescription}
-						placeholder="Describe your event"
-						multiline
-						numberOfLines={4}
-					/>
-				</View>
-
-				<View style={styles.inputGroup}>
-					<Text style={styles.label}>Attendees (emails, comma separated)</Text>
-					<TextInput
-						style={styles.input}
-						value={attendees}
-						onChangeText={setAttendees}
-						placeholder="Enter email addresses"
-					/>
-				</View>
-
-				<TouchableOpacity
-					style={styles.createButton}
-					onPress={handleCreateEvent}
+				<ScrollView
+					style={[
+						createEventStyles.container,
+						{
+							paddingTop: insets.top,
+							paddingBottom: insets.bottom,
+							paddingHorizontal: 16,
+						},
+					]}
+					showsVerticalScrollIndicator={false}
 				>
-					<Text style={styles.buttonText}>Create Event</Text>
-				</TouchableOpacity>
-			</ScrollView>
-		</KeyboardAvoidingView>
+					{/* Progress Indicator */}
+					<View style={createEventStyles.progressContainer}>
+						<View style={createEventStyles.progressBar}>
+							<Animated.View
+								style={[
+									createEventStyles.progressFill,
+									{
+										width: progressAnim.interpolate({
+											inputRange: [0.25, 0.5, 0.75, 1],
+											outputRange: ['25%', '50%', '75%', '100%'],
+										}),
+									},
+								]}
+							/>
+						</View>
+						<Text style={createEventStyles.stepText}>
+							Step {currentStep} of 4
+						</Text>
+					</View>
+
+					{/* Main Content */}
+					<View style={createEventStyles.mainContent}>
+						<Text style={createEventStyles.title}>{getStepTitle()}</Text>
+						<Text style={createEventStyles.subtitle}>{getStepSubtitle()}</Text>
+
+						{currentStep === 1 ? (
+							<CreateEventBasicInfo
+								eventTitle={eventTitle}
+								setEventTitle={setEventTitle}
+								selectedTags={selectedTags}
+								onTagPress={handleTagPress}
+								nameError={nameError}
+								errorShakeAnim={errorShakeAnim}
+							/>
+						) : currentStep === 2 ? (
+							<CreateEventLocationTime
+								searchQuery={searchQuery}
+								setSearchQuery={setSearchQuery}
+								eventLocation={eventLocation}
+								setEventLocation={setEventLocation}
+								eventDate={eventDate}
+								onDatePress={() => setShowDatePicker(true)}
+								onTimePress={() => setShowTimePicker(true)}
+								popularLocations={popularLocations}
+								errorShakeAnim={errorShakeAnim}
+								nameError={nameError}
+							/>
+						) : currentStep === 3 ? (
+							<CreateEventDetailsAttendees
+								description={eventDescription}
+								setDescription={setEventDescription}
+								attendees={attendees}
+								setAttendees={setAttendees}
+								searchQuery={searchQuery}
+								setSearchQuery={setSearchQuery}
+								nameError={nameError}
+								errorShakeAnim={errorShakeAnim}
+							/>
+						) : (
+							<CreateEventPreview
+								eventTitle={eventTitle}
+								selectedTags={selectedTags}
+								eventDate={eventDate}
+								eventLocation={eventLocation}
+								eventDescription={eventDescription}
+								attendees={attendees}
+							/>
+						)}
+					</View>
+
+					{/* Bottom Buttons */}
+					<View style={createEventStyles.buttonContainer}>
+						<TouchableOpacity
+							style={createEventStyles.backButton}
+							onPress={handleBack}
+							activeOpacity={0.7}
+						>
+							<Text style={createEventStyles.backButtonText}>
+								{currentStep === 1 ? 'Cancel' : 'Back'}
+							</Text>
+						</TouchableOpacity>
+						<Animated.View
+							style={[
+								createEventStyles.nextButtonContainer,
+								{ transform: [{ scale: buttonScaleAnim }] },
+							]}
+						>
+							<TouchableOpacity
+								style={[
+									createEventStyles.nextButton,
+									currentStep === 4 && createEventStyles.createButton,
+								]}
+								activeOpacity={1}
+								onPressIn={handleButtonPressIn}
+								onPressOut={handleButtonPressOut}
+								onPress={validateAndProceed}
+							>
+								<Text style={createEventStyles.nextButtonText}>
+									{currentStep === 4 ? 'Create Event' : 'Next'}
+								</Text>
+							</TouchableOpacity>
+						</Animated.View>
+					</View>
+				</ScrollView>
+			</KeyboardAvoidingView>
+
+			<CustomDatePicker
+				visible={showDatePicker}
+				onClose={() => setShowDatePicker(false)}
+				onSelectDate={handleDateSelect}
+				selectedDate={eventDate}
+			/>
+
+			<CustomTimePicker
+				visible={showTimePicker}
+				onClose={() => setShowTimePicker(false)}
+				onSelectTime={handleTimeSelect}
+				selectedTime={eventDate}
+			/>
+		</View>
 	);
 };
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 20,
-		backgroundColor: '#f8f8f8',
-	},
-	headerText: {
-		fontSize: 24,
-		fontWeight: 'bold',
-		marginBottom: 20,
-		color: '#333',
-	},
-	inputGroup: {
-		marginBottom: 16,
-	},
-	label: {
-		fontSize: 16,
-		marginBottom: 8,
-		fontWeight: '500',
-		color: '#555',
-	},
-	input: {
-		backgroundColor: '#fff',
-		borderRadius: 8,
-		padding: 12,
-		borderWidth: 1,
-		borderColor: '#ddd',
-	},
-	textArea: {
-		minHeight: 100,
-		textAlignVertical: 'top',
-	},
-	dateButton: {
-		backgroundColor: '#fff',
-		borderRadius: 8,
-		padding: 12,
-		borderWidth: 1,
-		borderColor: '#ddd',
-	},
-	createButton: {
-		backgroundColor: '#007bff',
-		borderRadius: 8,
-		padding: 16,
-		alignItems: 'center',
-		marginTop: 10,
-		marginBottom: 30,
-	},
-	buttonText: {
-		color: '#fff',
-		fontWeight: 'bold',
-		fontSize: 16,
-	},
-});
 
 export default CreateEventScreen;

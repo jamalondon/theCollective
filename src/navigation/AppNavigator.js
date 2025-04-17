@@ -9,43 +9,57 @@ import CreateEventScreen from '../screens/CreateEvent';
 import CustomTabBar from '../components/customTabBar.js';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-export default function AppNavigator({ navigation }) {
+function TabNavigator() {
 	return (
 		<Tab.Navigator
 			initialRouteName="Home"
-			tabBarVisible={false}
 			tabBar={(props) => <CustomTabBar {...props} />}
 			screenOptions={{
 				headerShown: false,
+				tabBarStyle: {
+					backgroundColor: 'transparent',
+					elevation: 0,
+					borderTopWidth: 0,
+				},
 			}}
 		>
-			<Tab.Screen
-				name="Home"
-				component={Home}
-				options={{ headerShown: false, title: 'Home' }}
-			/>
-			<Tab.Screen
-				name="Sermons"
-				component={Sermons}
-				options={{ headerShown: false }}
-			/>
-
+			<Tab.Screen name="Home" component={Home} options={{ title: 'Home' }} />
+			<Tab.Screen name="Sermons" component={Sermons} />
 			<Tab.Screen
 				name="Create Event"
-				component={CreateEventScreen}
-				options={{ headerShown: false }}
+				component={EmptyComponent}
+				options={{
+					tabBarButton: () => null,
+				}}
 			/>
-			<Tab.Screen
-				name="Reach Out"
-				component={MeetTheTeam}
-				options={{ headerShown: false }}
-			/>
-			<Tab.Screen
-				name="Profile"
-				component={Profile}
-				options={{ headerShown: false }}
-			/>
+			<Tab.Screen name="Reach Out" component={MeetTheTeam} />
+			<Tab.Screen name="Profile" component={Profile} />
 		</Tab.Navigator>
+	);
+}
+
+// Empty component for the create button in the tab bar
+const EmptyComponent = () => null;
+
+export default function AppNavigator() {
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				headerShown: false,
+				presentation: 'modal',
+			}}
+		>
+			<Stack.Screen name="Main" component={TabNavigator} />
+			<Stack.Screen
+				name="CreateEvent"
+				component={CreateEventScreen}
+				options={{
+					presentation: 'modal',
+					animation: 'slide_from_bottom',
+				}}
+			/>
+		</Stack.Navigator>
 	);
 }

@@ -1,18 +1,74 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Assuming you're using Expo
-import { tabBarStyles } from '../../style.js';
+import React, { useState, useRef } from 'react';
+import {
+	View,
+	TouchableOpacity,
+	Text,
+	StyleSheet,
+	Animated,
+	Pressable,
+} from 'react-native';
+import Icon from './Icon.js';
+import TabButton from './tabButton.js';
+import { tabBarStyles } from '../constants/style.js';
 
 function CustomTabBar({ state, descriptors, navigation }) {
-	// Map of icons for each route
-	const iconMap = {
-		Explore: 'compass',
-		Events: 'calendar',
-		Home: 'home',
-		'Reach Out': 'people',
-		Profile: 'person',
-		'Create Event': 'add',
-		Sermons: 'book',
+	const [isOpen, setIsOpen] = useState(false);
+	const animation = useRef(new Animated.Value(0)).current;
+
+	const toggleMenu = () => {
+		const toValue = isOpen ? 0 : 1;
+		setIsOpen(!isOpen);
+
+		Animated.spring(animation, {
+			toValue,
+			friction: 5,
+			tension: 40,
+			useNativeDriver: true,
+		}).start();
+	};
+
+	// Animation interpolations for sub-buttons
+	const eventButtonStyle = {
+		transform: [
+			{ scale: animation },
+			{
+				translateY: animation.interpolate({
+					inputRange: [0, 1],
+					outputRange: [0, -80],
+				}),
+			},
+		],
+		opacity: animation,
+	};
+
+	const prayerButtonStyle = {
+		transform: [
+			{ scale: animation },
+			{
+				translateY: animation.interpolate({
+					inputRange: [0, 1],
+					outputRange: [0, -140],
+				}),
+			},
+		],
+		opacity: animation,
+	};
+
+	// Rotation animation for the plus icon
+	const rotateStyle = {
+		transform: [
+			{
+				rotate: animation.interpolate({
+					inputRange: [0, 1],
+					outputRange: ['0deg', '45deg'],
+				}),
+			},
+		],
+	};
+
+	const handleCreateEvent = () => {
+		toggleMenu();
+		navigation.getParent().navigate('CreateEvent');
 	};
 
 	return (
@@ -39,54 +95,58 @@ function CustomTabBar({ state, descriptors, navigation }) {
 							navigation.navigate(route.name);
 						}
 					};
-
-					// Get appropriate icon
-					const iconName = iconMap[route.name] || 'ellipsis-horizontal';
-
 					return (
-						<TouchableOpacity
-							key={route.key}
-							accessibilityRole="button"
-							accessibilityState={isFocused ? { selected: true } : {}}
+						<TabButton
+							key={route.key || `tab-${index}`}
+							keyID={route.key || `tab-${index}`}
 							onPress={onPress}
-							style={tabBarStyles.tabButton}
-						>
-							<View style={tabBarStyles.tabItem}>
-								<View
-									style={[
-										tabBarStyles.iconContainer,
-										isFocused ? tabBarStyles.activeIconContainer : null,
-									]}
-								>
-									<Ionicons
-										name={iconName}
-										size={30}
-										color={isFocused ? '#4169E1' : '#AAAAAA'}
-									/>
-								</View>
-								<Text
-									style={[
-										tabBarStyles.tabText,
-										isFocused
-											? tabBarStyles.activeTabText
-											: tabBarStyles.inactiveTabText,
-									]}
-								>
-									{label}
-								</Text>
-							</View>
-						</TouchableOpacity>
+							route={route}
+							isFocused={isFocused}
+							label={label}
+						/>
 					);
 				})}
 			</View>
 
-			{/* Floating Action Button */}
+			{/* Sub FABs */}
+			<Animated.View style={[tabBarStyles.fabButton, eventButtonStyle]}>
+				<TouchableOpacity
+					style={tabBarStyles.subButton}
+					onPress={handleCreateEvent}
+				>
+					<Icon.IoniconsIcon name="calendar" size={20} color="white" />
+					<Text style={tabBarStyles.subButtonText}>New Event</Text>
+				</TouchableOpacity>
+			</Animated.View>
+
+			<Animated.View style={[tabBarStyles.fabButton, prayerButtonStyle]}>
+				<TouchableOpacity
+					style={tabBarStyles.subButton}
+					onPress={() => {
+						toggleMenu();
+						navigation.navigate('Prayer Request');
+					}}
+				>
+					<Icon.IoniconsIcon name="heart" size={20} color="white" />
+					<Text style={tabBarStyles.subButtonText}>Prayer Request</Text>
+				</TouchableOpacity>
+			</Animated.View>
+
+			{/* Main FAB */}
 			<TouchableOpacity
 				style={tabBarStyles.plusButton}
-				onPress={() => navigation.navigate('Create Event')}
+				onPress={toggleMenu}
+				activeOpacity={0.8}
 			>
-				<Ionicons name="add" size={30} color="white" />
+				<Animated.View style={rotateStyle}>
+					<Icon.IoniconsIcon name="add" size={30} color="white" />
+				</Animated.View>
 			</TouchableOpacity>
+
+			{/* Backdrop */}
+			{isOpen && (
+				<Pressable style={tabBarStyles.backdrop} onPress={toggleMenu} />
+			)}
 		</View>
 	);
 }

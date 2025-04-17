@@ -10,7 +10,7 @@ import {
 	ImageBackground,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { authStyles } from '../../style.js';
+import { authStyles } from '../constants/style.js';
 import * as RootNavigation from '../navigation/navigationRef.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { signUpUser } from '../store/userThunks.js';
@@ -18,24 +18,50 @@ import { clearError } from '../store/userSlice.js';
 
 const SignUp = ({ navigation }) => {
 	//state variables for the email, password, first name, and last name
-	// These are used to store the values of the text inputs
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
+	const [validationError, setValidationError] = useState('');
 
 	//redux state selectors
 	const errorMessage = useSelector((state) => state.user.errorMessage);
 
 	//redux dispatch function
-	// This is used to dispatch actions to the redux store
 	const dispatch = useDispatch();
 
 	//called when the submit button is pressed
-	// Dispatches the signUpUser thunk with the email, password, and name
 	const handleLogin = () => {
-		let name = `${firstName} ${lastName}`;
-		dispatch(signUpUser({ email, password, name, dateOfBirth: '05/12/1997' }));
+		// Clear previous errors
+		dispatch(clearError());
+
+		// Validate inputs
+		if (!firstName.trim() || !lastName.trim()) {
+			setErrorMessage('First name and last name are required');
+			return;
+		}
+		if (!email.trim()) {
+			setErrorMessage('Email is required');
+			return;
+		}
+		if (!password.trim()) {
+			setErrorMessage('Password is required');
+			return;
+		}
+		if (password.length < 6) {
+			setErrorMessage('Password must be at least 6 characters long');
+			return;
+		}
+
+		let name = `${firstName.trim()} ${lastName.trim()}`;
+		dispatch(
+			signUpUser({
+				email: email.trim(),
+				password,
+				name,
+				dateOfBirth: '1997-05-12',
+			})
+		);
 	};
 
 	return (
@@ -51,23 +77,32 @@ const SignUp = ({ navigation }) => {
 				<BlurView intensity={90} tint="dark" style={authStyles.glassCard}>
 					<Text style={{ color: 'white', fontSize: 40 }}>theCollective</Text>
 					<TextInput
-						style={authStyles.input}
+						style={[
+							authStyles.input,
+							validationError && firstName.length === 0 && styles.inputError,
+						]}
 						placeholder="First Name"
 						placeholderTextColor="white"
 						value={firstName}
 						onChangeText={setFirstName}
-						autoCapitalize="none"
+						autoCapitalize="words"
 					/>
 					<TextInput
-						style={authStyles.input}
+						style={[
+							authStyles.input,
+							validationError && lastName.length === 0 && styles.inputError,
+						]}
 						placeholder="Last Name"
 						placeholderTextColor="white"
 						value={lastName}
 						onChangeText={setLastName}
-						autoCapitalize="none"
+						autoCapitalize="words"
 					/>
 					<TextInput
-						style={authStyles.input}
+						style={[
+							authStyles.input,
+							validationError && email.length === 0 && styles.inputError,
+						]}
 						placeholder="Email"
 						placeholderTextColor="white"
 						value={email}
@@ -76,7 +111,10 @@ const SignUp = ({ navigation }) => {
 						autoCapitalize="none"
 					/>
 					<TextInput
-						style={authStyles.input}
+						style={[
+							authStyles.input,
+							validationError && password.length === 0 && styles.inputError,
+						]}
 						placeholder="Password"
 						placeholderTextColor="white"
 						value={password}
@@ -102,14 +140,26 @@ const SignUp = ({ navigation }) => {
 						</Text>
 					</TouchableOpacity>
 					{errorMessage ? (
-						<Text style={{ color: 'red', marginTop: 10 }}>{errorMessage}</Text>
-					) : (
-						''
-					)}
+						<Text style={styles.errorText}>{errorMessage}</Text>
+					) : errorMessage ? (
+						<Text style={styles.errorText}>{errorMessage}</Text>
+					) : null}
 				</BlurView>
 			</ImageBackground>
 		</KeyboardAvoidingView>
 	);
 };
+
+const styles = StyleSheet.create({
+	inputError: {
+		borderColor: 'red',
+		borderWidth: 1,
+	},
+	errorText: {
+		color: 'red',
+		marginTop: 10,
+		textAlign: 'center',
+	},
+});
 
 export default SignUp;

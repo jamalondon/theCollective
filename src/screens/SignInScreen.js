@@ -9,7 +9,7 @@ import {
 	ImageBackground,
 } from 'react-native';
 import { BlurView } from 'expo-blur';
-import { authStyles } from '../../style.js';
+import { authStyles } from '../constants/style.js';
 import * as RootNavigation from '../navigation/navigationRef.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInUser } from '../store/userThunks.js';
