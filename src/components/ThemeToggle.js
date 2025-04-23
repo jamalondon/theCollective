@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '../hooks/useAppTheme';
+import { useThemedStyles } from '../hooks/useThemedStyles';
 
 const ThemeToggle = () => {
 	const { isDarkMode, toggleTheme, colors } = useAppTheme();
@@ -66,7 +67,6 @@ const styles = StyleSheet.create({
 		width: 70,
 		height: 34,
 		borderRadius: 17,
-		padding: 2,
 		justifyContent: 'center',
 	},
 	toggle: {

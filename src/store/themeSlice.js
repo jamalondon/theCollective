@@ -1,9 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {
-	LIGHT_COLORS,
-	DARK_COLORS,
-	updateThemeColors,
-} from '../constants/theme';
+import { LIGHT_COLORS, DARK_COLORS } from '../constants/theme';
+import { createSelector } from '@reduxjs/toolkit';
 
 const initialState = {
 	isDarkMode: false,
@@ -17,14 +14,10 @@ const themeSlice = createSlice({
 		toggleTheme: (state) => {
 			state.isDarkMode = !state.isDarkMode;
 			state.colors = state.isDarkMode ? DARK_COLORS : LIGHT_COLORS;
-			// Update the global theme colors
-			updateThemeColors(state.isDarkMode);
 		},
 		setTheme: (state, action) => {
 			state.isDarkMode = action.payload;
 			state.colors = action.payload ? DARK_COLORS : LIGHT_COLORS;
-			// Update the global theme colors
-			updateThemeColors(action.payload);
 		},
 	},
 });
@@ -32,5 +25,10 @@ const themeSlice = createSlice({
 export const { toggleTheme, setTheme } = themeSlice.actions;
 export default themeSlice.reducer;
 
-// Selector
-export const selectTheme = (state) => state.theme;
+// Memoized selectors
+const selectThemeState = (state) => state.theme;
+
+export const selectTheme = createSelector([selectThemeState], (theme) => ({
+	isDarkMode: theme.isDarkMode,
+	colors: theme.colors,
+}));

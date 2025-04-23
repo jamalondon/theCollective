@@ -46,6 +46,7 @@ const userSlice = createSlice({
 			state.userID = action.payload.userID || '';
 			state.name = action.payload.name;
 			state.dateOfBirth = action.payload.dateOfBirth || '';
+			navigationRef.navigate('App');
 		});
 		builder.addCase(signInUser.rejected, (state, action) => {
 			state.errorMessage = action.payload || 'Sign in failed';
@@ -61,9 +62,9 @@ const userSlice = createSlice({
 			state.name = action.payload.name;
 			state.userID = action.payload.userID || '';
 			state.errorMessage = '';
+			navigationRef.navigate('App');
 		});
 		builder.addCase(signUpUser.rejected, (state, action) => {
-			console.log('action.payload', action.payload);
 			state.errorMessage = action.payload || 'Sign up failed';
 		});
 
@@ -71,7 +72,10 @@ const userSlice = createSlice({
 		builder.addCase(tryLocalSignIn.pending, (state) => {});
 		builder.addCase(tryLocalSignIn.fulfilled, (state, action) => {
 			state.token = action.payload.token;
-			// Note: We don't have other user info without a separate API call
+			state.email = action.payload.email;
+			state.name = action.payload.name;
+			state.userID = action.payload.userID || '';
+			state.dateOfBirth = action.payload.dateOfBirth || '';
 		});
 		builder.addCase(tryLocalSignIn.rejected, (state) => {
 			// We don't set an error message here as this is a background operation

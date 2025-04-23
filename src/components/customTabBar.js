@@ -9,11 +9,14 @@ import {
 } from 'react-native';
 import Icon from './Icon.js';
 import TabButton from './tabButton.js';
-import { tabBarStyles } from '../constants/style.js';
+import { useThemedStyles } from '../hooks/useThemedStyles';
+
+import { COLORS } from '../constants/theme';
 
 function CustomTabBar({ state, descriptors, navigation }) {
 	const [isOpen, setIsOpen] = useState(false);
 	const animation = useRef(new Animated.Value(0)).current;
+	const { tabBarStyles } = useThemedStyles();
 
 	const toggleMenu = () => {
 		const toValue = isOpen ? 0 : 1;

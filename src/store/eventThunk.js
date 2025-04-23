@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ServerAPI from '../API/ServerAPI';
-import * as RootNavigation from '../navigation/navigationRef';
+//import * as RootNavigation from '../navigation/navigationRef';
 
 // Create a new event
 export const createEvent = createAsyncThunk(

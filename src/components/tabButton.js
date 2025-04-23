@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { tabBarStyles } from '../constants/style.js';
 import Icon from './Icon.js';
+import { useThemedStyles } from '../hooks/useThemedStyles';
 
 function TabButton({
 	keyID,
@@ -22,6 +22,7 @@ function TabButton({
 		'Create Event': 'add',
 		Sermons: 'book',
 	};
+	const { tabBarStyles } = useThemedStyles();
 
 	// Get appropriate icon
 	const iconName = iconMap[route.name] || 'ellipsis-horizontal';
@@ -43,7 +44,7 @@ function TabButton({
 					<Icon.IoniconsIcon
 						name={iconName}
 						size={30}
-						color={isFocused ? '#4169E1' : '#AAAAAA'}
+						color={isFocused ? 'white' : '#AAAAAA'}
 					/>
 				</View>
 				<Text

@@ -8,21 +8,23 @@ import {
 	getAttendingEvents,
 } from '../store/eventThunk';
 import EventCard from '../components/EventCard';
+import { useThemedStyles } from '../hooks/useThemedStyles';
 
 const Home = ({ navigation }) => {
 	const insets = useSafeAreaInsets();
 	const dispatch = useDispatch();
 	const [refreshing, setRefreshing] = useState(false);
+	const { appStyles } = useThemedStyles();
 
 	// Get events from Redux store
 	const allEvents = useSelector((state) => state.events.allEvents);
-
+	console.log(allEvents[0].attendees);
 	// Sort events by creation date
 	const sortedEvents = useMemo(() => {
 		return [...allEvents].sort((a, b) => {
 			return (
-				new Date(b.createdAt || b.createdAtFormatted) -
-				new Date(a.createdAt || a.createdAtFormatted)
+				new Date(b.created_at || b.created_at) -
+				new Date(a.created_at || a.created_at)
 			);
 		});
 	}, [allEvents]);
@@ -59,7 +61,7 @@ const Home = ({ navigation }) => {
 	return (
 		<View
 			style={[
-				styles.container,
+				appStyles.container,
 				{
 					paddingTop: insets.top,
 					paddingBottom: insets.bottom,
@@ -85,10 +87,6 @@ const Home = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#f8f9fa',
-	},
 	listContent: {
 		flexGrow: 1,
 		paddingVertical: 8,

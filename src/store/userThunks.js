@@ -23,7 +23,6 @@ export const signUpUser = createAsyncThunk(
 				name,
 				dateOfBirth,
 			});
-			console.log('email, password, name, dateOfBirth');
 
 			// Validate response
 			if (!response.data || !response.data.token) {
@@ -39,9 +38,6 @@ export const signUpUser = createAsyncThunk(
 				dispatch(getMyEvents()),
 				dispatch(getAttendingEvents()),
 			]);
-
-			// Navigate to the home screen
-			RootNavigation.navigate('App');
 
 			// Return user data to be stored in Redux
 			return {
@@ -93,9 +89,6 @@ export const signInUser = createAsyncThunk(
 				dispatch(getAttendingEvents()),
 			]);
 
-			// Navigate to the home screen
-			RootNavigation.navigate('App');
-
 			// Return user data to be stored in Redux
 			return {
 				token: response.data.token,
@@ -130,14 +123,34 @@ export const tryLocalSignIn = createAsyncThunk(
 			}
 
 			try {
-				await dispatch(getAllEvents());
-			} catch (error) {
-				// Continue even if events fetch fails
-			}
+				// Verify token with server and get user information
+				const response = await ServerAPI.post('/auth/verify', { token });
 
-			return { token };
+				// Try to fetch events (non-blocking)
+				try {
+					await dispatch(getAllEvents());
+				} catch (error) {
+					// Continue even if events fetch fails
+				}
+
+				return {
+					token: response.data.token,
+					email: response.data.email,
+					name: response.data.name || '',
+					userID: response.data.userID || '',
+					dateOfBirth: response.data.dateOfBirth || '',
+				}; // Return full user data including token
+			} catch (error) {
+				// If token verification fails, clear it from storage
+				await AsyncStorage.removeItem('token');
+				throw error;
+			}
 		} catch (error) {
-			return rejectWithValue(error.message || 'Failed to restore session');
+			return rejectWithValue(
+				error.response?.data?.message ||
+					error.message ||
+					'Failed to restore session'
+			);
 		}
 	}
 );

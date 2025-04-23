@@ -11,10 +11,11 @@ export const LIGHT_COLORS = {
 	},
 	border: {
 		default: '#E5E5E5',
+		disabled: '#ccc',
 		light: '#f1f3f5',
 		input: '#e9ecef',
 	},
-	shadow: 'rgba(0, 0, 0, 0.1)',
+	shadow: 'rgba(0, 0, 0, 1)',
 	card: '#ffffff',
 	error: '#dc3545',
 	success: '#28a745',
@@ -35,7 +36,7 @@ export const DARK_COLORS = {
 		light: '#3D3D3D',
 		input: '#2D2D2D',
 	},
-	shadow: 'rgba(0, 0, 0, 0.3)',
+	shadow: 'rgba(255, 252, 252, .5)',
 	card: '#1E1E1E',
 	error: '#cf6679',
 	success: '#4caf50',
@@ -72,12 +73,4 @@ export const FONTS = {
 		semibold: '600',
 		bold: '700',
 	},
-};
-
-// Default colors will be determined by the theme context
-export let COLORS = LIGHT_COLORS;
-
-// Function to update colors based on theme
-export const updateThemeColors = (isDark) => {
-	COLORS = isDark ? DARK_COLORS : LIGHT_COLORS;
 };

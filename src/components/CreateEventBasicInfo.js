@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, Animated } from 'react-native';
 import TagSelector from './TagSelector';
-import { createEventStyles } from '../constants/style';
+import { useThemedStyles } from '../hooks/useThemedStyles';
 
 const CreateEventBasicInfo = ({
 	eventTitle,
@@ -11,6 +11,7 @@ const CreateEventBasicInfo = ({
 	nameError,
 	errorShakeAnim,
 }) => {
+	const { createEventStyles } = useThemedStyles();
 	return (
 		<>
 			<Animated.View

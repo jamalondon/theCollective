@@ -12,7 +12,12 @@ import WheelPickerCross from './WheelPickerCross';
 
 const CORAL_COLOR = '#FF6B6B';
 
-const CustomTimePicker = ({ visible, onClose, onSelectTime, selectedTime }) => {
+const CustomTimePicker = ({
+	visible,
+	closeModal,
+	onSelectTime,
+	selectedTime,
+}) => {
 	const [hours, setHours] = useState(0);
 	const [minutes, setMinutes] = useState(0);
 	const [period, setPeriod] = useState('AM');
@@ -65,7 +70,7 @@ const CustomTimePicker = ({ visible, onClose, onSelectTime, selectedTime }) => {
 			visible={visible}
 			transparent={true}
 			animationType="fade"
-			onRequestClose={onClose}
+			onRequestClose={closeModal}
 		>
 			<View style={styles.modalOverlay}>
 				<View style={styles.modalContent}>
@@ -106,7 +111,7 @@ const CustomTimePicker = ({ visible, onClose, onSelectTime, selectedTime }) => {
 					<View style={styles.buttonContainer}>
 						<TouchableOpacity
 							style={[styles.button, styles.cancelButton]}
-							onPress={onClose}
+							onPress={closeModal}
 						>
 							<Text style={styles.cancelButtonText}>Cancel</Text>
 						</TouchableOpacity>
@@ -114,7 +119,7 @@ const CustomTimePicker = ({ visible, onClose, onSelectTime, selectedTime }) => {
 							style={[styles.button, styles.confirmButton]}
 							onPress={() => {
 								handleConfirm();
-								onClose();
+								closeModal();
 							}}
 						>
 							<Text style={styles.confirmButtonText}>Confirm</Text>

@@ -1,0 +1,454 @@
+{
+    "_dispatchInstances": {
+        "_debugHookTypes": null,
+        "_debugInfo": null,
+        "_debugNeedsRemount": false,
+        "_debugOwner": {
+            "_debugHookTypes": null,
+            "_debugInfo": null,
+            "_debugNeedsRemount": false,
+            "_debugOwner": [FiberNode
+            ],
+            "actualDuration": 1.7235832214355469,
+            "actualStartTime": 762878035.39675,
+            "alternate": null,
+            "child": [Circular
+            ],
+            "childLanes": 0,
+            "deletions": null,
+            "dependencies": null,
+            "elementType": [Function Picker
+            ],
+            "flags": 1048577,
+            "index": 1,
+            "key": null,
+            "lanes": 0,
+            "memoizedProps": [Object
+            ],
+            "memoizedState": null,
+            "mode": 3,
+            "pendingProps": [Object
+            ],
+            "ref": null,
+            "refCleanup": null,
+            "return": [FiberNode
+            ],
+            "selfBaseDuration": 1.4587920904159546,
+            "sibling": [FiberNode
+            ],
+            "stateNode": null,
+            "subtreeFlags": 0,
+            "tag": 0,
+            "treeBaseDuration": 1.4637501239776611,
+            "type": [Function Picker
+            ],
+            "updateQueue": null
+        },
+        "actualDuration": 0.2630411386489868,
+        "actualStartTime": 762878036.857041,
+        "alternate": null,
+        "child": null,
+        "childLanes": 0,
+        "deletions": null,
+        "dependencies": null,
+        "elementType": "RNDateTimePicker",
+        "flags": 0,
+        "index": 0,
+        "key": null,
+        "lanes": 0,
+        "memoizedProps": {
+            "accentColor": undefined,
+            "date": 1745042008146,
+            "displayIOS": "spinner",
+            "enabled": true,
+            "locale": undefined,
+            "maximumDate": 1745042010713,
+            "minimumDate": undefined,
+            "minuteInterval": undefined,
+            "mode": "date",
+            "onChange": [Function _onChange
+            ],
+            "onPickerDismiss": [Function onDismiss
+            ],
+            "onResponderTerminationRequest": [Function onResponderTerminationRequest
+            ],
+            "onStartShouldSetResponder": [Function onStartShouldSetResponder
+            ],
+            "textColor": "#000000",
+            "themeVariant": undefined,
+            "timeZoneName": undefined,
+            "timeZoneOffsetInMinutes": undefined
+        },
+        "memoizedState": null,
+        "mode": 3,
+        "pendingProps": {
+            "accentColor": undefined,
+            "date": 1745042008146,
+            "displayIOS": "spinner",
+            "enabled": true,
+            "locale": undefined,
+            "maximumDate": 1745042010713,
+            "minimumDate": undefined,
+            "minuteInterval": undefined,
+            "mode": "date",
+            "onChange": [Function _onChange
+            ],
+            "onPickerDismiss": [Function onDismiss
+            ],
+            "onResponderTerminationRequest": [Function onResponderTerminationRequest
+            ],
+            "onStartShouldSetResponder": [Function onStartShouldSetResponder
+            ],
+            "textColor": "#000000",
+            "themeVariant": undefined,
+            "timeZoneName": undefined,
+            "timeZoneOffsetInMinutes": undefined
+        },
+        "ref": null,
+        "refCleanup": null,
+        "return": {
+            "_debugHookTypes": null,
+            "_debugInfo": null,
+            "_debugNeedsRemount": false,
+            "_debugOwner": [FiberNode
+            ],
+            "actualDuration": 1.7235832214355469,
+            "actualStartTime": 762878035.39675,
+            "alternate": null,
+            "child": [Circular
+            ],
+            "childLanes": 0,
+            "deletions": null,
+            "dependencies": null,
+            "elementType": [Function Picker
+            ],
+            "flags": 1048577,
+            "index": 1,
+            "key": null,
+            "lanes": 0,
+            "memoizedProps": [Object
+            ],
+            "memoizedState": null,
+            "mode": 3,
+            "pendingProps": [Object
+            ],
+            "ref": null,
+            "refCleanup": null,
+            "return": [FiberNode
+            ],
+            "selfBaseDuration": 1.4587920904159546,
+            "sibling": [FiberNode
+            ],
+            "stateNode": null,
+            "subtreeFlags": 0,
+            "tag": 0,
+            "treeBaseDuration": 1.4637501239776611,
+            "type": [Function Picker
+            ],
+            "updateQueue": null
+        },
+        "selfBaseDuration": 0.004958033561706543,
+        "sibling": null,
+        "stateNode": {
+            "canonical": [Object
+            ],
+            "node": [Object
+            ]
+        },
+        "subtreeFlags": 0,
+        "tag": 5,
+        "treeBaseDuration": 0.004958033561706543,
+        "type": "RNDateTimePicker",
+        "updateQueue": null
+    },
+    "_dispatchListeners": [Function _onChange
+    ],
+    "_targetInst": {
+        "_debugHookTypes": null,
+        "_debugInfo": null,
+        "_debugNeedsRemount": false,
+        "_debugOwner": {
+            "_debugHookTypes": null,
+            "_debugInfo": null,
+            "_debugNeedsRemount": false,
+            "_debugOwner": [FiberNode
+            ],
+            "actualDuration": 1.7235832214355469,
+            "actualStartTime": 762878035.39675,
+            "alternate": null,
+            "child": [Circular
+            ],
+            "childLanes": 0,
+            "deletions": null,
+            "dependencies": null,
+            "elementType": [Function Picker
+            ],
+            "flags": 1048577,
+            "index": 1,
+            "key": null,
+            "lanes": 0,
+            "memoizedProps": [Object
+            ],
+            "memoizedState": null,
+            "mode": 3,
+            "pendingProps": [Object
+            ],
+            "ref": null,
+            "refCleanup": null,
+            "return": [FiberNode
+            ],
+            "selfBaseDuration": 1.4587920904159546,
+            "sibling": [FiberNode
+            ],
+            "stateNode": null,
+            "subtreeFlags": 0,
+            "tag": 0,
+            "treeBaseDuration": 1.4637501239776611,
+            "type": [Function Picker
+            ],
+            "updateQueue": null
+        },
+        "actualDuration": 0.2630411386489868,
+        "actualStartTime": 762878036.857041,
+        "alternate": null,
+        "child": null,
+        "childLanes": 0,
+        "deletions": null,
+        "dependencies": null,
+        "elementType": "RNDateTimePicker",
+        "flags": 0,
+        "index": 0,
+        "key": null,
+        "lanes": 0,
+        "memoizedProps": {
+            "accentColor": undefined,
+            "date": 1745042008146,
+            "displayIOS": "spinner",
+            "enabled": true,
+            "locale": undefined,
+            "maximumDate": 1745042010713,
+            "minimumDate": undefined,
+            "minuteInterval": undefined,
+            "mode": "date",
+            "onChange": [Function _onChange
+            ],
+            "onPickerDismiss": [Function onDismiss
+            ],
+            "onResponderTerminationRequest": [Function onResponderTerminationRequest
+            ],
+            "onStartShouldSetResponder": [Function onStartShouldSetResponder
+            ],
+            "textColor": "#000000",
+            "themeVariant": undefined,
+            "timeZoneName": undefined,
+            "timeZoneOffsetInMinutes": undefined
+        },
+        "memoizedState": null,
+        "mode": 3,
+        "pendingProps": {
+            "accentColor": undefined,
+            "date": 1745042008146,
+            "displayIOS": "spinner",
+            "enabled": true,
+            "locale": undefined,
+            "maximumDate": 1745042010713,
+            "minimumDate": undefined,
+            "minuteInterval": undefined,
+            "mode": "date",
+            "onChange": [Function _onChange
+            ],
+            "onPickerDismiss": [Function onDismiss
+            ],
+            "onResponderTerminationRequest": [Function onResponderTerminationRequest
+            ],
+            "onStartShouldSetResponder": [Function onStartShouldSetResponder
+            ],
+            "textColor": "#000000",
+            "themeVariant": undefined,
+            "timeZoneName": undefined,
+            "timeZoneOffsetInMinutes": undefined
+        },
+        "ref": null,
+        "refCleanup": null,
+        "return": {
+            "_debugHookTypes": null,
+            "_debugInfo": null,
+            "_debugNeedsRemount": false,
+            "_debugOwner": [FiberNode
+            ],
+            "actualDuration": 1.7235832214355469,
+            "actualStartTime": 762878035.39675,
+            "alternate": null,
+            "child": [Circular
+            ],
+            "childLanes": 0,
+            "deletions": null,
+            "dependencies": null,
+            "elementType": [Function Picker
+            ],
+            "flags": 1048577,
+            "index": 1,
+            "key": null,
+            "lanes": 0,
+            "memoizedProps": [Object
+            ],
+            "memoizedState": null,
+            "mode": 3,
+            "pendingProps": [Object
+            ],
+            "ref": null,
+            "refCleanup": null,
+            "return": [FiberNode
+            ],
+            "selfBaseDuration": 1.4587920904159546,
+            "sibling": [FiberNode
+            ],
+            "stateNode": null,
+            "subtreeFlags": 0,
+            "tag": 0,
+            "treeBaseDuration": 1.4637501239776611,
+            "type": [Function Picker
+            ],
+            "updateQueue": null
+        },
+        "selfBaseDuration": 0.004958033561706543,
+        "sibling": null,
+        "stateNode": {
+            "canonical": [Object
+            ],
+            "node": [Object
+            ]
+        },
+        "subtreeFlags": 0,
+        "tag": 5,
+        "treeBaseDuration": 0.004958033561706543,
+        "type": "RNDateTimePicker",
+        "updateQueue": null
+    },
+    "bubbles": undefined,
+    "cancelable": undefined,
+    "currentTarget": {
+        "__internalInstanceHandle": {
+            "_debugHookTypes": null,
+            "_debugInfo": null,
+            "_debugNeedsRemount": false,
+            "_debugOwner": [FiberNode
+            ],
+            "actualDuration": 0.2630411386489868,
+            "actualStartTime": 762878036.857041,
+            "alternate": null,
+            "child": null,
+            "childLanes": 0,
+            "deletions": null,
+            "dependencies": null,
+            "elementType": "RNDateTimePicker",
+            "flags": 0,
+            "index": 0,
+            "key": null,
+            "lanes": 0,
+            "memoizedProps": [Object
+            ],
+            "memoizedState": null,
+            "mode": 3,
+            "pendingProps": [Object
+            ],
+            "ref": null,
+            "refCleanup": null,
+            "return": [FiberNode
+            ],
+            "selfBaseDuration": 0.004958033561706543,
+            "sibling": null,
+            "stateNode": [Object
+            ],
+            "subtreeFlags": 0,
+            "tag": 5,
+            "treeBaseDuration": 0.004958033561706543,
+            "type": "RNDateTimePicker",
+            "updateQueue": null
+        },
+        "__nativeTag": 222,
+        "_viewConfig": {
+            "Commands": [Object
+            ],
+            "bubblingEventTypes": [Object
+            ],
+            "directEventTypes": [Object
+            ],
+            "uiViewClassName": "RNDateTimePicker",
+            "validAttributes": [Object
+            ]
+        }
+    },
+    "defaultPrevented": undefined,
+    "dispatchConfig": {
+        "phasedRegistrationNames": {
+            "bubbled": "onChange",
+            "captured": "onChangeCapture"
+        }
+    },
+    "eventPhase": undefined,
+    "isDefaultPrevented": [Function functionThatReturnsFalse
+    ],
+    "isPropagationStopped": [Function functionThatReturnsFalse
+    ],
+    "isTrusted": undefined,
+    "nativeEvent": {
+        "target": 222,
+        "timestamp": 1744779600000,
+        "utcOffset": 0
+    },
+    "target": {
+        "__internalInstanceHandle": {
+            "_debugHookTypes": null,
+            "_debugInfo": null,
+            "_debugNeedsRemount": false,
+            "_debugOwner": [FiberNode
+            ],
+            "actualDuration": 0.2630411386489868,
+            "actualStartTime": 762878036.857041,
+            "alternate": null,
+            "child": null,
+            "childLanes": 0,
+            "deletions": null,
+            "dependencies": null,
+            "elementType": "RNDateTimePicker",
+            "flags": 0,
+            "index": 0,
+            "key": null,
+            "lanes": 0,
+            "memoizedProps": [Object
+            ],
+            "memoizedState": null,
+            "mode": 3,
+            "pendingProps": [Object
+            ],
+            "ref": null,
+            "refCleanup": null,
+            "return": [FiberNode
+            ],
+            "selfBaseDuration": 0.004958033561706543,
+            "sibling": null,
+            "stateNode": [Object
+            ],
+            "subtreeFlags": 0,
+            "tag": 5,
+            "treeBaseDuration": 0.004958033561706543,
+            "type": "RNDateTimePicker",
+            "updateQueue": null
+        },
+        "__nativeTag": 222,
+        "_viewConfig": {
+            "Commands": [Object
+            ],
+            "bubblingEventTypes": [Object
+            ],
+            "directEventTypes": [Object
+            ],
+            "uiViewClassName": "RNDateTimePicker",
+            "validAttributes": [Object
+            ]
+        }
+    },
+    "timeStamp": 1745042013630,
+    "type": "set"
+}

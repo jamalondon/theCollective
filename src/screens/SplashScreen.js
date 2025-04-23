@@ -3,12 +3,10 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { tryLocalSignIn } from '../store/userThunks.js';
 import * as RootNavigation from '../navigation/navigationRef';
-import * as ExpoSplashScreen from 'expo-splash-screen';
-
-// Prevent the splash screen from auto-hiding
-ExpoSplashScreen.preventAutoHideAsync().catch(() => {});
+import GatherAnimation from '../components/GatherAnimation';
 
 const INITIALIZATION_TIMEOUT = 30000; // 30 seconds
+const MINIMUM_SPLASH_DURATION = 10000; // Changed to 10 seconds to match animation
 
 const SplashScreen = () => {
 	const dispatch = useDispatch();
@@ -25,9 +23,23 @@ const SplashScreen = () => {
 					}, INITIALIZATION_TIMEOUT);
 				});
 
-				await Promise.race([dispatch(tryLocalSignIn()), timeoutPromise]);
+				const minimumDurationPromise = new Promise((resolve) => {
+					setTimeout(resolve, MINIMUM_SPLASH_DURATION);
+				});
+
+				// Wait for both the minimum duration AND the initialization
+				await Promise.all([
+					Promise.race([dispatch(tryLocalSignIn()), timeoutPromise]),
+					minimumDurationPromise,
+				]);
+
 				setIsInitialized(true);
 			} catch (error) {
+				console.log('Initialization error:', error);
+				// Still wait for minimum duration even if there's an error
+				await new Promise((resolve) =>
+					setTimeout(resolve, MINIMUM_SPLASH_DURATION)
+				);
 				setIsInitialized(true);
 			}
 		};
@@ -35,38 +47,25 @@ const SplashScreen = () => {
 		initializeApp();
 	}, []);
 
-	// Handle navigation and splash screen hiding
+	// Handle navigation
 	useEffect(() => {
-		const handleStateChange = async () => {
-			if (isInitialized) {
-				try {
-					await ExpoSplashScreen.hideAsync();
-					if (token === null) {
-						RootNavigation.navigate('Auth');
-					} else if (token) {
-						RootNavigation.navigate('App');
-					}
-				} catch (error) {
-					if (token === null) {
-						RootNavigation.navigate('Auth');
-					} else if (token) {
-						RootNavigation.navigate('App');
-					}
-				}
+		if (isInitialized) {
+			if (token === null) {
+				RootNavigation.navigate('Welcome');
+			} else if (token) {
+				RootNavigation.navigate('App');
 			}
-		};
-
-		handleStateChange();
+		}
 	}, [isInitialized, token]);
 
 	return (
 		<View style={styles.container}>
+			<GatherAnimation />
 			<Image
-				source={require('../data/images/logo.jpg')}
+				source={require('../data/images/logo-transparent.png')}
 				style={styles.logo}
 				resizeMode="contain"
 			/>
-			<Text style={styles.title}>The Collective</Text>
 			<Text style={styles.subtitle}>Loading...</Text>
 		</View>
 	);
@@ -83,15 +82,12 @@ const styles = StyleSheet.create({
 		width: 150,
 		height: 150,
 		marginBottom: 20,
-	},
-	title: {
-		fontSize: 24,
-		fontWeight: 'bold',
-		marginBottom: 10,
+		zIndex: 2, // Ensure logo appears above the animation
 	},
 	subtitle: {
 		fontSize: 16,
 		color: '#666',
+		zIndex: 2, // Ensure text appears above the animation
 	},
 });
 

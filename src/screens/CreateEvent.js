@@ -18,7 +18,7 @@ import CreateEventBasicInfo from '../components/CreateEventBasicInfo';
 import CreateEventLocationTime from '../components/CreateEventLocationTime';
 import CreateEventDetailsAttendees from '../components/CreateEventDetailsAttendees';
 import CreateEventPreview from '../components/CreateEventPreview';
-import { createEventStyles } from '../constants/style.js';
+import { useThemedStyles } from '../hooks/useThemedStyles';
 import { useCreateEventAnimations } from '../animations/createEventAnimations';
 import { createEvent } from '../store/eventThunk';
 
@@ -40,6 +40,7 @@ const CreateEventScreen = ({ navigation }) => {
 	const [eventDescription, setEventDescription] = useState('');
 	const [attendees, setAttendees] = useState([]);
 	const [searchQuery, setSearchQuery] = useState('');
+	const { createEventStyles, authStyles } = useThemedStyles();
 
 	// State for modal visibility
 	const [showDatePicker, setShowDatePicker] = useState(false);
@@ -77,8 +78,6 @@ const CreateEventScreen = ({ navigation }) => {
 		newDate.setDate(date.getDate());
 		console.log('newDate', newDate);
 		setEventDate(newDate);
-		setShowDatePicker(false);
-		setShowTimePicker(true);
 	};
 
 	const handleTimeSelect = (date) => {
@@ -181,142 +180,138 @@ const CreateEventScreen = ({ navigation }) => {
 	};
 
 	return (
-		<View style={createEventStyles.mainContainer}>
-			<KeyboardAvoidingView
-				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-				style={createEventStyles.flex}
+		<KeyboardAvoidingView
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+			style={[
+				createEventStyles.mainContainer,
+				{
+					paddingTop: insets.top,
+					paddingBottom: insets.bottom,
+					paddingLeft: insets.left,
+					paddingRight: insets.right,
+				},
+			]}
+		>
+			{/* Progress Indicator */}
+			<View style={createEventStyles.progressContainer}>
+				<View style={createEventStyles.progressBar}>
+					<Animated.View
+						style={[
+							createEventStyles.progressFill,
+							{
+								width: progressAnim.interpolate({
+									inputRange: [0.25, 0.5, 0.75, 1],
+									outputRange: ['25%', '50%', '75%', '100%'],
+								}),
+							},
+						]}
+					/>
+				</View>
+				<Text style={createEventStyles.stepText}>Step {currentStep} of 4</Text>
+			</View>
+
+			<ScrollView
+				style={createEventStyles.subContainer}
+				showsVerticalScrollIndicator={false}
 			>
-				<ScrollView
-					style={[
-						createEventStyles.container,
-						{
-							paddingTop: insets.top,
-							paddingBottom: insets.bottom,
-							paddingHorizontal: 16,
-						},
-					]}
-					showsVerticalScrollIndicator={false}
-				>
-					{/* Progress Indicator */}
-					<View style={createEventStyles.progressContainer}>
-						<View style={createEventStyles.progressBar}>
-							<Animated.View
-								style={[
-									createEventStyles.progressFill,
-									{
-										width: progressAnim.interpolate({
-											inputRange: [0.25, 0.5, 0.75, 1],
-											outputRange: ['25%', '50%', '75%', '100%'],
-										}),
-									},
-								]}
-							/>
-						</View>
-						<Text style={createEventStyles.stepText}>
-							Step {currentStep} of 4
+				{/* Main Content */}
+				<View style={createEventStyles.mainContent}>
+					<Text style={createEventStyles.title}>{getStepTitle()}</Text>
+					<Text style={createEventStyles.subtitle}>{getStepSubtitle()}</Text>
+
+					{currentStep === 1 ? (
+						<CreateEventBasicInfo
+							eventTitle={eventTitle}
+							setEventTitle={setEventTitle}
+							selectedTags={selectedTags}
+							onTagPress={handleTagPress}
+							nameError={nameError}
+							errorShakeAnim={errorShakeAnim}
+						/>
+					) : currentStep === 2 ? (
+						<CreateEventLocationTime
+							searchQuery={searchQuery}
+							setSearchQuery={setSearchQuery}
+							eventLocation={eventLocation}
+							setEventLocation={setEventLocation}
+							eventDate={eventDate}
+							onDatePress={() => setShowDatePicker(true)}
+							onTimePress={() => setShowTimePicker(true)}
+							popularLocations={popularLocations}
+							errorShakeAnim={errorShakeAnim}
+							nameError={nameError}
+						/>
+					) : currentStep === 3 ? (
+						<CreateEventDetailsAttendees
+							description={eventDescription}
+							setDescription={setEventDescription}
+							attendees={attendees}
+							setAttendees={setAttendees}
+							searchQuery={searchQuery}
+							setSearchQuery={setSearchQuery}
+							nameError={nameError}
+							errorShakeAnim={errorShakeAnim}
+						/>
+					) : (
+						<CreateEventPreview
+							eventTitle={eventTitle}
+							selectedTags={selectedTags}
+							eventDate={eventDate}
+							eventLocation={eventLocation}
+							eventDescription={eventDescription}
+							attendees={attendees}
+						/>
+					)}
+				</View>
+
+				{/* Bottom Buttons */}
+				<View style={createEventStyles.buttonContainer}>
+					<TouchableOpacity
+						style={createEventStyles.backButton}
+						onPress={handleBack}
+						activeOpacity={0.7}
+					>
+						<Text style={createEventStyles.backButtonText}>
+							{currentStep === 1 ? 'Cancel' : 'Back'}
 						</Text>
-					</View>
-
-					{/* Main Content */}
-					<View style={createEventStyles.mainContent}>
-						<Text style={createEventStyles.title}>{getStepTitle()}</Text>
-						<Text style={createEventStyles.subtitle}>{getStepSubtitle()}</Text>
-
-						{currentStep === 1 ? (
-							<CreateEventBasicInfo
-								eventTitle={eventTitle}
-								setEventTitle={setEventTitle}
-								selectedTags={selectedTags}
-								onTagPress={handleTagPress}
-								nameError={nameError}
-								errorShakeAnim={errorShakeAnim}
-							/>
-						) : currentStep === 2 ? (
-							<CreateEventLocationTime
-								searchQuery={searchQuery}
-								setSearchQuery={setSearchQuery}
-								eventLocation={eventLocation}
-								setEventLocation={setEventLocation}
-								eventDate={eventDate}
-								onDatePress={() => setShowDatePicker(true)}
-								onTimePress={() => setShowTimePicker(true)}
-								popularLocations={popularLocations}
-								errorShakeAnim={errorShakeAnim}
-								nameError={nameError}
-							/>
-						) : currentStep === 3 ? (
-							<CreateEventDetailsAttendees
-								description={eventDescription}
-								setDescription={setEventDescription}
-								attendees={attendees}
-								setAttendees={setAttendees}
-								searchQuery={searchQuery}
-								setSearchQuery={setSearchQuery}
-								nameError={nameError}
-								errorShakeAnim={errorShakeAnim}
-							/>
-						) : (
-							<CreateEventPreview
-								eventTitle={eventTitle}
-								selectedTags={selectedTags}
-								eventDate={eventDate}
-								eventLocation={eventLocation}
-								eventDescription={eventDescription}
-								attendees={attendees}
-							/>
-						)}
-					</View>
-
-					{/* Bottom Buttons */}
-					<View style={createEventStyles.buttonContainer}>
+					</TouchableOpacity>
+					<Animated.View
+						style={[
+							createEventStyles.nextButtonContainer,
+							{ transform: [{ scale: buttonScaleAnim }] },
+						]}
+					>
 						<TouchableOpacity
-							style={createEventStyles.backButton}
-							onPress={handleBack}
-							activeOpacity={0.7}
+							style={[
+								createEventStyles.nextButton,
+								currentStep === 4 && createEventStyles.createButton,
+							]}
+							activeOpacity={1}
+							onPressIn={handleButtonPressIn}
+							onPressOut={handleButtonPressOut}
+							onPress={validateAndProceed}
 						>
-							<Text style={createEventStyles.backButtonText}>
-								{currentStep === 1 ? 'Cancel' : 'Back'}
+							<Text style={createEventStyles.nextButtonText}>
+								{currentStep === 4 ? 'Create Event' : 'Next'}
 							</Text>
 						</TouchableOpacity>
-						<Animated.View
-							style={[
-								createEventStyles.nextButtonContainer,
-								{ transform: [{ scale: buttonScaleAnim }] },
-							]}
-						>
-							<TouchableOpacity
-								style={[
-									createEventStyles.nextButton,
-									currentStep === 4 && createEventStyles.createButton,
-								]}
-								activeOpacity={1}
-								onPressIn={handleButtonPressIn}
-								onPressOut={handleButtonPressOut}
-								onPress={validateAndProceed}
-							>
-								<Text style={createEventStyles.nextButtonText}>
-									{currentStep === 4 ? 'Create Event' : 'Next'}
-								</Text>
-							</TouchableOpacity>
-						</Animated.View>
-					</View>
-				</ScrollView>
-			</KeyboardAvoidingView>
-
+					</Animated.View>
+				</View>
+			</ScrollView>
 			<CustomDatePicker
 				visible={showDatePicker}
-				onClose={() => setShowDatePicker(false)}
+				closeModal={() => setShowDatePicker(false)}
 				onSelectDate={handleDateSelect}
 				selectedDate={eventDate}
 			/>
 
 			<CustomTimePicker
 				visible={showTimePicker}
-				onClose={() => setShowTimePicker(false)}
+				closeModal={() => setShowTimePicker(false)}
 				onSelectTime={handleTimeSelect}
 				selectedTime={eventDate}
 			/>
-		</View>
+		</KeyboardAvoidingView>
 	);
 };
 

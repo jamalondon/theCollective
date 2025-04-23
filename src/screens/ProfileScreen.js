@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import { signOutUser } from '../store/userThunks';
 import * as RootNavigation from '../navigation/navigationRef';
-import { appStyles } from '../constants/style';
+import { useThemedStyles } from '../hooks/useThemedStyles';
 import ThemeToggle from '../components/ThemeToggle';
 import { useAppTheme } from '../hooks/useAppTheme';
 import Icon from '../components/Icon';
@@ -15,6 +15,7 @@ const Profile = () => {
 	const insets = useSafeAreaInsets();
 	const dispatch = useDispatch();
 	const { colors } = useAppTheme();
+	const { appStyles } = useThemedStyles();
 
 	//redux state selectors
 	// These are the selectors for the user state in the redux store

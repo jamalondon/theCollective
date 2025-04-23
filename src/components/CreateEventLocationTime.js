@@ -9,9 +9,8 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
-import { createEventStyles } from '../constants/style';
+import { useThemedStyles } from '../hooks/useThemedStyles';
 import { searchLocations } from '../store/eventThunk';
-import debounce from 'lodash/debounce';
 
 const CreateEventLocationTime = ({
 	searchQuery,
@@ -25,20 +24,9 @@ const CreateEventLocationTime = ({
 	errorShakeAnim,
 	nameError,
 }) => {
+	const { createEventStyles } = useThemedStyles();
 	const dispatch = useDispatch();
 	const { searchResults, loading } = useSelector((state) => state.events);
-
-	// Debounced search function
-	const debouncedSearch = debounce((query) => {
-		if (query.trim()) {
-			dispatch(searchLocations(query));
-		}
-	}, 500);
-
-	useEffect(() => {
-		debouncedSearch(searchQuery);
-		return () => debouncedSearch.cancel();
-	}, [searchQuery]);
 
 	const handleLocationSelect = (location) => {
 		setEventLocation(location.name);

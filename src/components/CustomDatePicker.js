@@ -1,58 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
 	Modal,
 	View,
 	Text,
 	TouchableOpacity,
 	StyleSheet,
-	Dimensions,
+	Platform,
 } from 'react-native';
-import { Calendar } from 'react-native-calendars';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const CORAL_COLOR = '#FF6B6B';
 
-const CustomDatePicker = ({ visible, onClose, onSelectDate, selectedDate }) => {
-	const currentDate = selectedDate || new Date();
-	const formattedDate = currentDate.toISOString().split('T')[0];
+const CustomDatePicker = ({
+	visible,
+	closeModal,
+	onSelectDate,
+	selectedDate,
+	minimumDate,
+	maximumDate,
+}) => {
+	const [tempDate, setTempDate] = useState(selectedDate || new Date());
+
+	const handleChange = (event, date, option) => {
+		if (option === 'date') {
+			setTempDate(date);
+		} else if (option === 'close') {
+			onSelectDate(tempDate);
+			closeModal();
+		}
+	};
 
 	return (
 		<Modal
 			visible={visible}
 			transparent={true}
-			animationType="fade"
-			onRequestClose={onClose}
+			animationType="slide"
+			onRequestClose={closeModal}
 		>
 			<View style={styles.modalOverlay}>
 				<View style={styles.modalContent}>
-					<Text style={styles.title}>Select Date</Text>
-					<Calendar
-						current={formattedDate}
-						minDate={new Date().toISOString().split('T')[0]}
-						onDayPress={(day) => {
-							const selectedDate = new Date(day.timestamp);
-							onSelectDate(selectedDate);
-						}}
-						markedDates={{
-							[formattedDate]: {
-								selected: true,
-								selectedColor: CORAL_COLOR,
-							},
-						}}
-						theme={{
-							todayTextColor: CORAL_COLOR,
-							selectedDayBackgroundColor: CORAL_COLOR,
-							selectedDayTextColor: '#ffffff',
-							arrowColor: CORAL_COLOR,
-							monthTextColor: '#333',
-							textMonthFontWeight: 'bold',
-							textDayFontSize: 16,
-							textMonthFontSize: 16,
-							textDayHeaderFontSize: 14,
-						}}
+					<Text style={styles.title}>Select date of birth</Text>
+
+					<DateTimePicker
+						value={tempDate}
+						mode="date"
+						display={Platform.OS === 'ios' ? 'spinner' : 'calendar'}
+						onChange={(event, date) => handleChange(event, date, 'date')}
+						maximumDate={maximumDate || new Date()}
+						minimumDate={minimumDate}
+						textColor="#000000"
 					/>
-					<TouchableOpacity style={styles.closeButton} onPress={onClose}>
-						<Text style={styles.closeButtonText}>Close</Text>
-					</TouchableOpacity>
+
+					{Platform.OS === 'ios' && (
+						<TouchableOpacity
+							style={styles.closeButton}
+							onPress={() => handleChange(null, null, 'close')}
+						>
+							<Text style={styles.closeButtonText}>Close</Text>
+						</TouchableOpacity>
+					)}
 				</View>
 			</View>
 		</Modal>
@@ -70,21 +76,21 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		borderRadius: 20,
 		padding: 20,
-		width: Dimensions.get('window').width * 0.9,
-		maxHeight: Dimensions.get('window').height * 0.8,
+		width: '90%',
+		alignItems: 'center',
 	},
 	title: {
-		fontSize: 20,
-		fontWeight: '600',
-		color: '#333',
+		fontSize: 24,
+		fontWeight: '700',
+		color: '#000',
 		marginBottom: 20,
-		textAlign: 'center',
 	},
 	closeButton: {
 		backgroundColor: CORAL_COLOR,
 		padding: 15,
-		borderRadius: 10,
+		borderRadius: 25,
 		marginTop: 20,
+		width: '100%',
 		alignItems: 'center',
 	},
 	closeButtonText: {

@@ -3,6 +3,7 @@ import { selectTheme, toggleTheme, setTheme } from '../store/themeSlice';
 import { useColorScheme } from 'react-native';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LIGHT_COLORS, DARK_COLORS } from '../constants/theme';
 
 const THEME_PREFERENCE_KEY = '@theme_preference';
 
@@ -46,9 +47,14 @@ export const useAppTheme = () => {
 		}
 	};
 
+	// Ensure we always have valid colors even if theme state is not ready
+	const colors =
+		theme?.colors ||
+		(systemColorScheme === 'dark' ? DARK_COLORS : LIGHT_COLORS);
+
 	return {
-		isDarkMode: theme.isDarkMode,
-		colors: theme.colors,
+		isDarkMode: theme?.isDarkMode ?? systemColorScheme === 'dark',
+		colors,
 		toggleTheme: handleToggleTheme,
 	};
 };

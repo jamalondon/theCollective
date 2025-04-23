@@ -1,22 +1,28 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import SignIn from '../screens/SignInScreen.js';
-import SignUp from '../screens/SignUpScreen.js';
+import Welcome from '../screens/WelcomeScreen.js';
+import SplashScreen from '../screens/SplashScreen';
 
 const Stack = createNativeStackNavigator();
 
 export default function AuthNavigator() {
+	const forFade = ({ current }) => ({
+		cardStyle: {
+			opacity: current.progress,
+		},
+	});
+
 	return (
-		<Stack.Navigator initialRouteName="SignIn">
+		<Stack.Navigator initialRouteName="Splash">
 			<Stack.Screen
-				name="SignIn"
-				component={SignIn}
+				name="Splash"
+				component={SplashScreen}
 				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
-				name="SignUp"
-				component={SignUp}
-				options={{ headerShown: false }}
+				name="Welcome"
+				component={Welcome}
+				options={{ headerShown: false, cardStyleInterpolator: forFade }}
 			/>
 		</Stack.Navigator>
 	);

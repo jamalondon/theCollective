@@ -16,7 +16,7 @@ const EventCard = ({ event, onPress }) => {
 	return (
 		<TouchableOpacity style={styles.card} onPress={onPress}>
 			<View style={styles.dateContainer}>
-				<Text style={styles.date}>{event.createdAtFormatted}</Text>
+				<Text style={styles.date}>{formatDate(event.created_at)}</Text>
 			</View>
 			<View style={styles.contentContainer}>
 				<Text style={styles.title}>{event.title}</Text>
