@@ -6,6 +6,7 @@ import Home from '../screens/HomeScreen';
 import Sermons from '../screens/SermonsScreen';
 import MeetTheTeam from '../screens/MeetTheTeamScreen';
 import CreateEventScreen from '../screens/CreateEvent';
+import EventDetailsScreen from '../screens/EventDetailsScreen.js';
 import CustomTabBar from '../components/customTabBar.js';
 
 const Tab = createBottomTabNavigator();
@@ -55,6 +56,14 @@ export default function AppNavigator() {
 			<Stack.Screen
 				name="CreateEvent"
 				component={CreateEventScreen}
+				options={{
+					presentation: 'modal',
+					animation: 'slide_from_bottom',
+				}}
+			/>
+			<Stack.Screen
+				name="EventDetails"
+				component={EventDetailsScreen}
 				options={{
 					presentation: 'modal',
 					animation: 'slide_from_bottom',

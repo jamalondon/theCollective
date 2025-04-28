@@ -1,38 +1,69 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from './Icon';
 
 const EventCard = ({ event, onPress }) => {
-	// Format the date to a readable string
-	const formatDate = (dateString) => {
+	// Format the date and time to readable strings
+	const formatDateTime = (dateString) => {
 		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', {
+		const timeStr = date.toLocaleTimeString('en-US', {
+			hour: 'numeric',
+			minute: '2-digit',
+			hour12: true,
+		});
+		const dateStr = date.toLocaleDateString('en-US', {
+			weekday: 'short',
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric',
 		});
+		return { dateStr, timeStr };
 	};
+
+	const { dateStr, timeStr } = formatDateTime(event.date || event.created_at);
 
 	return (
 		<TouchableOpacity style={styles.card} onPress={onPress}>
-			<View style={styles.dateContainer}>
-				<Text style={styles.date}>{formatDate(event.created_at)}</Text>
+			<View style={styles.avatarContainer}>
+				<Image
+					source={{ uri: event.owner.profile_picture }}
+					style={styles.avatar}
+				/>
 			</View>
 			<View style={styles.contentContainer}>
-				<Text style={styles.title}>{event.title}</Text>
+				<View style={styles.headerContainer}>
+					<Text style={styles.title}>{event.title}</Text>
+					<View style={styles.dateTimeContainer}>
+						<Icon.IoniconsIcon name="time-outline" size={14} color="#666" />
+						<Text style={styles.dateTimeText}>
+							{dateStr} • {timeStr}
+						</Text>
+					</View>
+				</View>
 				<Text style={styles.description} numberOfLines={2}>
 					{event.description}
 				</Text>
+				{event.tags && event.tags.length > 0 && (
+					<View style={styles.tagsContainer}>
+						{event.tags.map((tag, index) => (
+							<View key={index} style={styles.tag}>
+								<Text style={styles.tagText}>{tag}</Text>
+							</View>
+						))}
+					</View>
+				)}
 				<View style={styles.footer}>
+					<View style={styles.locationContainer}>
+						<Icon.IoniconsIcon name="location" size={16} color="#666" />
+						<Text style={styles.locationText} numberOfLines={1}>
+							{event.location}
+						</Text>
+					</View>
 					<View style={styles.attendeesContainer}>
 						<Icon.IoniconsIcon name="people" size={16} color="#666" />
 						<Text style={styles.attendeesText}>
 							{event.attendees?.length || 0} attending
 						</Text>
-					</View>
-					<View style={styles.locationContainer}>
-						<Icon.IoniconsIcon name="location" size={16} color="#666" />
-						<Text style={styles.locationText}>{event.location}</Text>
 					</View>
 				</View>
 			</View>
@@ -55,54 +86,96 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 3,
 		flexDirection: 'row',
+		overflow: 'hidden',
 	},
-	dateContainer: {
+	avatarContainer: {
 		padding: 12,
-		borderRightWidth: 1,
-		borderRightColor: '#f0f0f0',
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		width: 76,
+	},
+	avatar: {
+		width: 52,
+		height: 52,
+		borderRadius: 26,
+		backgroundColor: '#f0f0f0',
+	},
+	avatarPlaceholder: {
+		width: 52,
+		height: 52,
+		borderRadius: 26,
+		backgroundColor: '#f0f0f0',
 		justifyContent: 'center',
 		alignItems: 'center',
-		width: 80,
-	},
-	date: {
-		fontSize: 12,
-		color: '#666',
-		textAlign: 'center',
 	},
 	contentContainer: {
 		flex: 1,
 		padding: 12,
 	},
+	headerContainer: {
+		marginBottom: 8,
+	},
 	title: {
 		fontSize: 16,
 		fontWeight: 'bold',
-		marginBottom: 4,
 		color: '#333',
+		marginBottom: 4,
+	},
+	dateTimeContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	dateTimeText: {
+		fontSize: 12,
+		color: '#666',
+		marginLeft: 4,
 	},
 	description: {
 		fontSize: 14,
 		color: '#666',
 		marginBottom: 8,
+		lineHeight: 20,
+	},
+	tagsContainer: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		marginBottom: 8,
+	},
+	tag: {
+		backgroundColor: '#e9ecef',
+		borderRadius: 12,
+		paddingHorizontal: 8,
+		paddingVertical: 4,
+		marginRight: 6,
+		marginBottom: 4,
+	},
+	tagText: {
+		fontSize: 12,
+		color: '#495057',
 	},
 	footer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		marginTop: 4,
+	},
+	locationContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		flex: 1,
+		marginRight: 8,
+	},
+	locationText: {
+		marginLeft: 4,
+		fontSize: 12,
+		color: '#666',
+		flex: 1,
 	},
 	attendeesContainer: {
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 	attendeesText: {
-		marginLeft: 4,
-		fontSize: 12,
-		color: '#666',
-	},
-	locationContainer: {
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	locationText: {
 		marginLeft: 4,
 		fontSize: 12,
 		color: '#666',

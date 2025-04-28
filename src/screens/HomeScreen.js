@@ -18,7 +18,6 @@ const Home = ({ navigation }) => {
 
 	// Get events from Redux store
 	const allEvents = useSelector((state) => state.events.allEvents);
-	console.log(allEvents[0].attendees);
 	// Sort events by creation date
 	const sortedEvents = useMemo(() => {
 		return [...allEvents].sort((a, b) => {
@@ -46,8 +45,9 @@ const Home = ({ navigation }) => {
 
 	// Handle event press
 	const handleEventPress = (event) => {
+		//console.log(event.attendees);
 		// Navigate to event details screen
-		// navigation.navigate('EventDetails', { eventId: event.id });
+		navigation.navigate('EventDetails', { eventID: event.id });
 	};
 
 	// Render empty state

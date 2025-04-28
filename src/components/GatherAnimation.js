@@ -5,7 +5,7 @@ import { useThemedStyles } from '../hooks/useThemedStyles';
 const { width, height } = Dimensions.get('window');
 const NUM_DOTS = 50; // Number of dots in the animation
 const DOT_SIZE = 6;
-const ANIMATION_DURATION = 10000; // 10 seconds
+const ANIMATION_DURATION = 2000; // 10 seconds
 const CIRCLE_RADIUS = 150; // Radius for the circle formation
 
 const generateRandomPosition = () => {

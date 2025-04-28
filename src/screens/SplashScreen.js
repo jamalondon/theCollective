@@ -6,7 +6,7 @@ import * as RootNavigation from '../navigation/navigationRef';
 import GatherAnimation from '../components/GatherAnimation';
 
 const INITIALIZATION_TIMEOUT = 30000; // 30 seconds
-const MINIMUM_SPLASH_DURATION = 10000; // Changed to 10 seconds to match animation
+const MINIMUM_SPLASH_DURATION = 2000; // Changed to 10 seconds to match animation
 
 const SplashScreen = () => {
 	const dispatch = useDispatch();

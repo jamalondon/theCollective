@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { navigationRef } from '../navigation/navigationRef';
+import * as RootNavigation from '../navigation/navigationRef';
+
 import {
 	signInUser,
 	signUpUser,
@@ -46,7 +47,7 @@ const userSlice = createSlice({
 			state.userID = action.payload.userID || '';
 			state.name = action.payload.name;
 			state.dateOfBirth = action.payload.dateOfBirth || '';
-			navigationRef.navigate('App');
+			RootNavigation.navigate('App');
 		});
 		builder.addCase(signInUser.rejected, (state, action) => {
 			state.errorMessage = action.payload || 'Sign in failed';
@@ -62,7 +63,7 @@ const userSlice = createSlice({
 			state.name = action.payload.name;
 			state.userID = action.payload.userID || '';
 			state.errorMessage = '';
-			navigationRef.navigate('App');
+			RootNavigation.navigate('App');
 		});
 		builder.addCase(signUpUser.rejected, (state, action) => {
 			state.errorMessage = action.payload || 'Sign up failed';

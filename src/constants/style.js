@@ -212,6 +212,142 @@ export const createStyles = (colors) => {
 		},
 	});
 
+	const eventDetailStyles = StyleSheet.create({
+		container: {
+			flex: 1,
+			padding: 10,
+			backgroundColor: colors.background,
+		},
+		scrollView: {
+			padding: 10,
+			fontSize: 16,
+		},
+		text: {
+			color: colors.text.primary,
+			fontSize: 16,
+		},
+		headerSection: {
+			padding: 20,
+			flex: 1,
+			width: '100%',
+			flexDirection: 'row',
+		},
+		title: {
+			fontSize: 24,
+			fontWeight: 'bold',
+			marginBottom: 16,
+			color: colors.text.primary,
+			flexWrap: 'wrap',
+		},
+		subtitle: {
+			fontSize: 14,
+			marginTop: 2,
+			fontStyle: 'italic',
+			color: colors.text.primary,
+		},
+		hostInfo: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			marginTop: 10,
+		},
+		hostImage: {
+			width: 40,
+			height: 40,
+			borderRadius: 20,
+			marginRight: 12,
+		},
+		hostDetails: {
+			flex: 1,
+		},
+		hostName: {
+			fontSize: 16,
+			fontWeight: '600',
+		},
+		hostEmail: {
+			fontSize: 14,
+			marginTop: 2,
+		},
+
+		detailRow: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			marginBottom: 16,
+		},
+		descriptionContainer: {
+			marginTop: 20,
+		},
+		descriptionTitle: {
+			fontSize: 18,
+			fontWeight: '600',
+			marginBottom: 8,
+			color: colors.text.primary,
+		},
+		description: {
+			color: colors.text.primary,
+			marginTop: 10,
+			fontSize: 16,
+			lineHeight: 24,
+		},
+		sectionTitle: {
+			fontSize: 18,
+			fontWeight: '600',
+			marginBottom: 12,
+		},
+		attendeesList: {
+			flexDirection: 'column',
+			flexWrap: 'wrap',
+		},
+		attendeeItem: {
+			marginRight: 12,
+			marginBottom: 8,
+			flex: 1,
+			flexDirection: 'row',
+			alignItems: 'center',
+		},
+		attendeeImage: {
+			width: 40,
+			height: 40,
+			borderRadius: 20,
+			marginRight: 12,
+		},
+		attendeeName: {
+			fontSize: 14,
+		},
+		tagsSection: {
+			padding: 20,
+			paddingTop: 0,
+		},
+		tagsList: {
+			flexDirection: 'row',
+			flexWrap: 'wrap',
+		},
+		tagItem: {
+			paddingHorizontal: 12,
+			paddingVertical: 6,
+			borderRadius: 16,
+			marginRight: 8,
+			marginBottom: 8,
+		},
+		tagText: {
+			fontSize: 14,
+		},
+		attendButton: {
+			margin: 20,
+			padding: 16,
+			borderRadius: 8,
+			alignItems: 'center',
+		},
+		attendButtonText: {
+			color: 'white',
+			fontSize: 16,
+			fontWeight: '600',
+		},
+		errorText: {
+			fontSize: 16,
+			textAlign: 'center',
+		},
+	});
+
 	const tabBarStyles = StyleSheet.create({
 		mainContainer: {
 			position: 'absolute',
@@ -643,5 +779,6 @@ export const createStyles = (colors) => {
 		tabBarStyles,
 		createEventStyles,
 		splashStyles,
+		eventDetailStyles,
 	};
 };
