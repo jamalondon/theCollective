@@ -6,12 +6,6 @@ import SplashScreen from '../screens/SplashScreen';
 const Stack = createNativeStackNavigator();
 
 export default function AuthNavigator() {
-	const forFade = ({ current }) => ({
-		cardStyle: {
-			opacity: current.progress,
-		},
-	});
-
 	return (
 		<Stack.Navigator initialRouteName="Splash">
 			<Stack.Screen
@@ -22,7 +16,7 @@ export default function AuthNavigator() {
 			<Stack.Screen
 				name="Welcome"
 				component={Welcome}
-				options={{ headerShown: false, cardStyleInterpolator: forFade }}
+				options={{ headerShown: false }}
 			/>
 		</Stack.Navigator>
 	);

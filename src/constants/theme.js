@@ -24,7 +24,7 @@ export const LIGHT_COLORS = {
 
 export const DARK_COLORS = {
 	primary: '#FF6B6B',
-	background: '#121212',
+	background: 'rgba(0, 0, 0, 1)',
 	surface: '#1E1E1E',
 	text: {
 		primary: '#E1E1E1',

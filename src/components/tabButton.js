@@ -17,7 +17,7 @@ function TabButton({
 		Explore: 'compass',
 		Events: 'calendar',
 		Home: 'home',
-		'Reach Out': 'people',
+		Connect: 'people',
 		Profile: 'person',
 		'Create Event': 'add',
 		Sermons: 'book',

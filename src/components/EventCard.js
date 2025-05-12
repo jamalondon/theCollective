@@ -2,80 +2,80 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Icon from './Icon';
 
-const EventCard = ({ event, onPress }) => {
-	// Format the date and time to readable strings
-	const formatDateTime = (dateString) => {
-		const date = new Date(dateString);
-		const timeStr = date.toLocaleTimeString('en-US', {
-			hour: 'numeric',
-			minute: '2-digit',
-			hour12: true,
-		});
-		const dateStr = date.toLocaleDateString('en-US', {
-			weekday: 'short',
-			month: 'short',
-			day: 'numeric',
-			year: 'numeric',
-		});
-		return { dateStr, timeStr };
-	};
+// const EventCard = ({ event, onPress }) => {
+// 	// Format the date and time to readable strings
+// 	const formatDateTime = (dateString) => {
+// 		const date = new Date(dateString);
+// 		const timeStr = date.toLocaleTimeString('en-US', {
+// 			hour: 'numeric',
+// 			minute: '2-digit',
+// 			hour12: true,
+// 		});
+// 		const dateStr = date.toLocaleDateString('en-US', {
+// 			weekday: 'short',
+// 			month: 'short',
+// 			day: 'numeric',
+// 			year: 'numeric',
+// 		});
+// 		return { dateStr, timeStr };
+// 	};
 
-	const { dateStr, timeStr } = formatDateTime(event.date || event.created_at);
+// 	const { dateStr, timeStr } = formatDateTime(event.date || event.created_at);
 
-	return (
-		<TouchableOpacity style={styles.card} onPress={onPress}>
-			<View style={styles.avatarContainer}>
-				<Image
-					source={{ uri: event.owner.profile_picture }}
-					style={styles.avatar}
-				/>
-			</View>
-			<View style={styles.contentContainer}>
-				<View style={styles.headerContainer}>
-					<Text style={styles.title}>{event.title}</Text>
-					<View style={styles.dateTimeContainer}>
-						<Icon.IoniconsIcon name="time-outline" size={14} color="#666" />
-						<Text style={styles.dateTimeText}>
-							{dateStr} • {timeStr}
-						</Text>
-					</View>
-				</View>
-				<Text style={styles.description} numberOfLines={2}>
-					{event.description}
-				</Text>
-				{event.tags && event.tags.length > 0 && (
-					<View style={styles.tagsContainer}>
-						{event.tags.map((tag, index) => (
-							<View key={index} style={styles.tag}>
-								<Text style={styles.tagText}>{tag}</Text>
-							</View>
-						))}
-					</View>
-				)}
-				<View style={styles.footer}>
-					<View style={styles.locationContainer}>
-						<Icon.IoniconsIcon name="location" size={16} color="#666" />
-						<Text style={styles.locationText} numberOfLines={1}>
-							{event.location}
-						</Text>
-					</View>
-					<View style={styles.attendeesContainer}>
-						<Icon.IoniconsIcon name="people" size={16} color="#666" />
-						<Text style={styles.attendeesText}>
-							{event.attendees?.length || 0} attending
-						</Text>
-					</View>
-				</View>
-			</View>
-		</TouchableOpacity>
-	);
-};
+// 	return (
+// 		<TouchableOpacity style={styles.card} onPress={onPress}>
+// 			<View style={styles.contentContainer}>
+// 				<View style={styles.headerContainer}>
+// 					<Image
+// 						source={{ uri: event.owner.profile_picture }}
+// 						style={styles.avatar}
+// 					/>
+// 					<View style={styles.titleContainer}>
+// 						<Text style={styles.title}>{event.title}</Text>
+// 						<View style={styles.dateTimeContainer}>
+// 							<Icon.IoniconsIcon name="time-outline" size={14} color="#666" />
+// 							<Text style={styles.dateTimeText}>
+// 								{dateStr} • {timeStr}
+// 							</Text>
+// 						</View>
+// 					</View>
+// 				</View>
+// 				<Text style={styles.description} numberOfLines={3}>
+// 					{event.description}
+// 				</Text>
+// 				{event.tags && event.tags.length > 0 && (
+// 					<View style={styles.tagsContainer}>
+// 						{event.tags.map((tag, index) => (
+// 							<View key={index} style={styles.tag}>
+// 								<Text style={styles.tagText}>{tag}</Text>
+// 							</View>
+// 						))}
+// 					</View>
+// 				)}
+// 				<View style={styles.footerContainer}>
+// 					<View style={styles.locationContainer}>
+// 						<Icon.IoniconsIcon name="location" size={16} color="#666" />
+// 						<Text style={styles.locationText} numberOfLines={1}>
+// 							{event.location}
+// 						</Text>
+// 					</View>
+// 					<View style={styles.attendeesContainer}>
+// 						<Icon.IoniconsIcon name="people" size={16} color="#666" />
+// 						<Text style={styles.attendeesText}>
+// 							{event.attendees?.length || 0} attending
+// 						</Text>
+// 					</View>
+// 				</View>
+// 			</View>
+// 		</TouchableOpacity>
+// 	);
+// };
 
 const styles = StyleSheet.create({
 	card: {
 		backgroundColor: 'white',
 		borderRadius: 12,
-		marginHorizontal: 16,
+		marginHorizontal: 10,
 		marginVertical: 8,
 		shadowColor: '#000',
 		shadowOffset: {
@@ -87,12 +87,14 @@ const styles = StyleSheet.create({
 		elevation: 3,
 		flexDirection: 'row',
 		overflow: 'hidden',
+		padding: 16,
 	},
 	avatarContainer: {
 		padding: 12,
 		justifyContent: 'flex-start',
 		alignItems: 'center',
 		width: 76,
+		backgroundColor: 'red',
 	},
 	avatar: {
 		width: 52,
@@ -100,20 +102,17 @@ const styles = StyleSheet.create({
 		borderRadius: 26,
 		backgroundColor: '#f0f0f0',
 	},
-	avatarPlaceholder: {
-		width: 52,
-		height: 52,
-		borderRadius: 26,
-		backgroundColor: '#f0f0f0',
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
 	contentContainer: {
 		flex: 1,
-		padding: 12,
+	},
+	titleContainer: {
+		flexDirection: 'column',
+		alignSelf: 'center',
+		marginLeft: 8,
 	},
 	headerContainer: {
 		marginBottom: 8,
+		flexDirection: 'row',
 	},
 	title: {
 		fontSize: 16,
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		color: '#495057',
 	},
-	footer: {
+	footerContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',

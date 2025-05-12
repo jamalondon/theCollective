@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,38 +7,86 @@ import {
 	getMyEvents,
 	getAttendingEvents,
 } from '../store/eventThunk';
-import EventCard from '../components/EventCard';
+import { getPrayerRequests } from '../store/prayerRequestThunk';
+//import EventCard from '../components/EventCard';
 import { useThemedStyles } from '../hooks/useThemedStyles';
 
 const Home = ({ navigation }) => {
 	const insets = useSafeAreaInsets();
 	const dispatch = useDispatch();
 	const [refreshing, setRefreshing] = useState(false);
+	const [newsFeed, setNewsFeed] = useState([]);
 	const { appStyles } = useThemedStyles();
 
 	// Get events from Redux store
 	const allEvents = useSelector((state) => state.events.allEvents);
-	// Sort events by creation date
-	const sortedEvents = useMemo(() => {
-		return [...allEvents].sort((a, b) => {
-			return (
-				new Date(b.created_at || b.created_at) -
-				new Date(a.created_at || a.created_at)
-			);
-		});
-	}, [allEvents]);
+	//get prayer requests from Redux store
+	const prayerRequests = useSelector(
+		(state) => state.prayerRequests.prayerRequests
+	);
 
+	//async function to get data from server
+	const fetchData = async () => {
+		await Promise.all([
+			dispatch(getAllEvents()),
+			dispatch(getMyEvents()),
+			dispatch(getAttendingEvents()),
+			dispatch(getPrayerRequests()),
+		]);
+	};
+
+	//get inital data from server
+	useEffect(() => {
+		try {
+			fetchData();
+		} catch (error) {
+			console.error('Error fetching data:', error);
+		}
+	}, []);
+
+	// Combine events and prayer requests, then sort by creation date
+	const sortedNewsFeed = useMemo(() => {
+		// First, make sure both arrays exist
+		const safeEvents = allEvents || [];
+		const safePrayerRequests = prayerRequests || [];
+
+		// Combine the two arrays
+		const combined = [...safeEvents, ...safePrayerRequests];
+
+		// Debug which date fields are being used
+		console.log('Sample items:', {
+			event: safeEvents.length ? safeEvents[0] : null,
+			prayer: safePrayerRequests.length ? safePrayerRequests[0] : null,
+		});
+
+		// Sort by created_at date
+		return combined.sort((a, b) => {
+			// Determine which date field to use and log it
+			const aField = a.created_at
+				? 'created_at'
+				: a.createdAt
+				? 'createdAt'
+				: 'date';
+			const bField = b.created_at
+				? 'created_at'
+				: b.createdAt
+				? 'createdAt'
+				: 'date';
+
+			const dateA = new Date(a[aField]);
+			const dateB = new Date(b[bField]);
+			return dateB - dateA;
+		});
+	}, [allEvents, prayerRequests]);
+
+	console.log(sortedNewsFeed);
 	// Handle refresh
 	const onRefresh = async () => {
 		setRefreshing(true);
 		try {
-			await Promise.all([
-				dispatch(getAllEvents()),
-				dispatch(getMyEvents()),
-				dispatch(getAttendingEvents()),
-			]);
+			fetchData();
 		} catch (error) {
-			console.error('Error refreshing events:', error);
+			console.error('Error fetching data:', error);
 		}
 		setRefreshing(false);
 	};
@@ -71,9 +119,11 @@ const Home = ({ navigation }) => {
 			]}
 		>
 			<FlatList
-				data={sortedEvents}
+				data={sortedNewsFeed}
 				renderItem={({ item }) => (
-					<EventCard event={item} onPress={() => handleEventPress(item)} />
+					<View>
+						<Text>{item.title}</Text>
+					</View>
 				)}
 				keyExtractor={(item) => item.id}
 				refreshControl={

@@ -1,17 +1,8 @@
 import React, { useState, useRef } from 'react';
-import {
-	View,
-	TouchableOpacity,
-	Text,
-	StyleSheet,
-	Animated,
-	Pressable,
-} from 'react-native';
+import { View, TouchableOpacity, Text, Animated } from 'react-native';
 import Icon from './Icon.js';
 import TabButton from './tabButton.js';
 import { useThemedStyles } from '../hooks/useThemedStyles';
-
-import { COLORS } from '../constants/theme';
 
 function CustomTabBar({ state, descriptors, navigation }) {
 	const [isOpen, setIsOpen] = useState(false);
@@ -79,7 +70,7 @@ function CustomTabBar({ state, descriptors, navigation }) {
 			<View style={tabBarStyles.container}>
 				{state.routes.map((route, index) => {
 					const { options } = descriptors[route.key];
-					const label = options.tabBarLabel || options.title || route.name;
+					const label = route.name;
 					const isFocused = state.index === index;
 
 					// Skip rendering if we're at the middle position
@@ -127,7 +118,7 @@ function CustomTabBar({ state, descriptors, navigation }) {
 					style={tabBarStyles.subButton}
 					onPress={() => {
 						toggleMenu();
-						navigation.navigate('Prayer Request');
+						navigation.navigate('PrayerRequest');
 					}}
 				>
 					<Icon.IoniconsIcon name="heart" size={20} color="white" />
@@ -145,11 +136,6 @@ function CustomTabBar({ state, descriptors, navigation }) {
 					<Icon.IoniconsIcon name="add" size={30} color="white" />
 				</Animated.View>
 			</TouchableOpacity>
-
-			{/* Backdrop */}
-			{isOpen && (
-				<Pressable style={tabBarStyles.backdrop} onPress={toggleMenu} />
-			)}
 		</View>
 	);
 }

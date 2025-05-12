@@ -18,6 +18,7 @@ const CustomDatePicker = ({
 	selectedDate,
 	minimumDate,
 	maximumDate,
+	mode = 'date',
 }) => {
 	const [tempDate, setTempDate] = useState(selectedDate || new Date());
 
@@ -39,14 +40,24 @@ const CustomDatePicker = ({
 		>
 			<View style={styles.modalOverlay}>
 				<View style={styles.modalContent}>
-					<Text style={styles.title}>Select date of birth</Text>
+					<Text style={styles.title}>
+						{mode === 'time' ? 'Select Time' : 'Select Date'}
+					</Text>
 
 					<DateTimePicker
 						value={tempDate}
-						mode="date"
-						display={Platform.OS === 'ios' ? 'spinner' : 'calendar'}
+						mode={mode}
+						display={
+							Platform.OS === 'ios'
+								? 'spinner'
+								: mode === 'time'
+								? 'clock'
+								: 'calendar'
+						}
 						onChange={(event, date) => handleChange(event, date, 'date')}
-						maximumDate={maximumDate || new Date()}
+						maximumDate={
+							maximumDate || (mode === 'date' ? new Date() : undefined)
+						}
 						minimumDate={minimumDate}
 						textColor="#000000"
 					/>

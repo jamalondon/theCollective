@@ -106,10 +106,16 @@ const EventDetails = ({ route, navigation }) => {
 		>
 			<View style={eventDetailStyles.scrollView}>
 				{/*Back Button*/}
-				<TouchableOpacity onPress={navigation.goBack}>
+				<TouchableOpacity
+					onPress={navigation.goBack}
+					style={{
+						marginLeft: 10,
+						margin: 'auto',
+					}}
+				>
 					<Icon.IoniconsIcon
 						name="arrow-back"
-						size={32}
+						size={36}
 						color={colors.primary}
 					/>
 				</TouchableOpacity>
@@ -120,17 +126,16 @@ const EventDetails = ({ route, navigation }) => {
 						source={{ uri: event.owner.profile_picture }}
 						style={eventDetailStyles.hostImage}
 					/>
-					<View style={eventDetailStyles.title}>
-						<Text style={eventDetailStyles.title}>{event.title}</Text>
-						<Text
-							style={[
-								eventDetailStyles.subtitle,
-								{ color: colors.textSecondary },
-							]}
-						>
-							hosted by {event.owner.name}
-						</Text>
-					</View>
+					<Text
+						style={eventDetailStyles.title}
+						numberOfLines={2}
+						ellipsizeMode="tail"
+					>
+						{event.title}
+					</Text>
+					<Text style={eventDetailStyles.subtitle}>
+						hosted by {event.owner.name}
+					</Text>
 				</View>
 
 				{/* Event Details Section */}

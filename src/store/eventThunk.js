@@ -1,14 +1,14 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ServerAPI from '../API/ServerAPI';
 //import * as RootNavigation from '../navigation/navigationRef';
 
 // Create a new event
 export const createEvent = createAsyncThunk(
 	'events/create',
-	async (eventData, { rejectWithValue }) => {
+	async (eventData, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.post('/events/create', eventData, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -24,9 +24,10 @@ export const createEvent = createAsyncThunk(
 // Get all events
 export const getAllEvents = createAsyncThunk(
 	'events/getAll',
-	async (_, { rejectWithValue }) => {
+	async (_, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.get('/events', {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -42,9 +43,10 @@ export const getAllEvents = createAsyncThunk(
 // Get events owned by current user
 export const getMyEvents = createAsyncThunk(
 	'events/getMine',
-	async (_, { rejectWithValue }) => {
+	async (_, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.get('/events/my-events', {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -62,9 +64,10 @@ export const getMyEvents = createAsyncThunk(
 // Get events user is attending
 export const getAttendingEvents = createAsyncThunk(
 	'events/getAttending',
-	async (_, { rejectWithValue }) => {
+	async (_, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.get('/events/attending', {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -82,9 +85,10 @@ export const getAttendingEvents = createAsyncThunk(
 // Get specific event by ID
 export const getEventById = createAsyncThunk(
 	'events/getById',
-	async (eventId, { rejectWithValue }) => {
+	async (eventId, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.get(`/events/${eventId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -100,9 +104,10 @@ export const getEventById = createAsyncThunk(
 // Update an event
 export const updateEvent = createAsyncThunk(
 	'events/update',
-	async ({ eventId, updateData }, { rejectWithValue }) => {
+	async ({ eventId, updateData }, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.put(
 				`/events/${eventId}/update`,
 				updateData,
@@ -122,9 +127,10 @@ export const updateEvent = createAsyncThunk(
 // Attend an event
 export const attendEvent = createAsyncThunk(
 	'events/attend',
-	async (eventId, { rejectWithValue }) => {
+	async (eventId, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.post(`/events/${eventId}/attend`, null, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -140,9 +146,10 @@ export const attendEvent = createAsyncThunk(
 // Cancel attendance
 export const cancelAttendance = createAsyncThunk(
 	'events/cancel',
-	async (eventId, { rejectWithValue }) => {
+	async (eventId, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.post(`/events/${eventId}/cancel`, null, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -160,9 +167,10 @@ export const cancelAttendance = createAsyncThunk(
 // Delete an event
 export const deleteEvent = createAsyncThunk(
 	'events/delete',
-	async (eventId, { rejectWithValue }) => {
+	async (eventId, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.delete(`/events/${eventId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
@@ -178,9 +186,10 @@ export const deleteEvent = createAsyncThunk(
 // Search users
 export const searchUsers = createAsyncThunk(
 	'events/searchUsers',
-	async (searchQuery, { rejectWithValue }) => {
+	async (searchQuery, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.get(
 				`/users/search?query=${encodeURIComponent(searchQuery)}`,
 				{
@@ -199,9 +208,10 @@ export const searchUsers = createAsyncThunk(
 // Search locations
 export const searchLocations = createAsyncThunk(
 	'events/searchLocations',
-	async (searchQuery, { rejectWithValue }) => {
+	async (searchQuery, { rejectWithValue, getState }) => {
 		try {
-			const token = await AsyncStorage.getItem('token');
+			const { user } = getState();
+			const token = user.token;
 			const response = await ServerAPI.get(
 				`/locations/search?query=${encodeURIComponent(searchQuery)}`,
 				{

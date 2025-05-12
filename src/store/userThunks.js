@@ -46,6 +46,7 @@ export const signUpUser = createAsyncThunk(
 				name,
 				userID: response.data.userID || '',
 				dateOfBirth,
+				profilePicture: response.data.profilePicture || '',
 			};
 		} catch (error) {
 			if (error.response) {
@@ -82,13 +83,6 @@ export const signInUser = createAsyncThunk(
 			// Store token in AsyncStorage for persistence
 			await AsyncStorage.setItem('token', response.data.token);
 
-			// Fetch initial event data
-			await Promise.all([
-				dispatch(getAllEvents()),
-				dispatch(getMyEvents()),
-				dispatch(getAttendingEvents()),
-			]);
-
 			// Return user data to be stored in Redux
 			return {
 				token: response.data.token,
@@ -96,9 +90,11 @@ export const signInUser = createAsyncThunk(
 				name: response.data.name || '',
 				userID: response.data.userID || '',
 				dateOfBirth: response.data.dateOfBirth || '',
+				profilePicture: response.data.profilePicture || '',
 			};
 		} catch (error) {
 			if (error.response) {
+				console.log('error.response', error.response);
 				return rejectWithValue(
 					error.response.data?.message || 'Server error occurred'
 				);
@@ -139,6 +135,7 @@ export const tryLocalSignIn = createAsyncThunk(
 					name: response.data.name || '',
 					userID: response.data.userID || '',
 					dateOfBirth: response.data.dateOfBirth || '',
+					profilePicture: response.data.profilePicture || '',
 				}; // Return full user data including token
 			} catch (error) {
 				// If token verification fails, clear it from storage

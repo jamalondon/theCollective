@@ -19,7 +19,7 @@ import { useAppTheme } from '../hooks/useAppTheme';
 const SignInModal = ({ visible, closeModal }) => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const { authStyles } = useThemedStyles();
+	const { authStyles, commonStyles } = useThemedStyles();
 	const { colors } = useAppTheme();
 
 	//redux state selectors
@@ -146,6 +146,9 @@ const SignInModal = ({ visible, closeModal }) => {
 									textContentType="password"
 									autoComplete="password"
 								/>
+								{errorMessage && (
+									<Text style={commonStyles.errorText}>{errorMessage}</Text>
+								)}
 
 								<TouchableOpacity
 									style={styles.forgotPassword}

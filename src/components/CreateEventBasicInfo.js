@@ -30,6 +30,7 @@ const CreateEventBasicInfo = ({
 					onChangeText={setEventTitle}
 					placeholder="Enter event name"
 					placeholderTextColor="#999"
+					maxLength={30}
 				/>
 				{nameError ? (
 					<Text style={createEventStyles.errorText}>{nameError}</Text>

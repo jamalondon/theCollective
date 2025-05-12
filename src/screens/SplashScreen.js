@@ -3,10 +3,8 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { tryLocalSignIn } from '../store/userThunks.js';
 import * as RootNavigation from '../navigation/navigationRef';
-import GatherAnimation from '../components/GatherAnimation';
 
 const INITIALIZATION_TIMEOUT = 30000; // 30 seconds
-const MINIMUM_SPLASH_DURATION = 2000; // Changed to 10 seconds to match animation
 
 const SplashScreen = () => {
 	const dispatch = useDispatch();
@@ -28,19 +26,13 @@ const SplashScreen = () => {
 				});
 
 				// Wait for both the minimum duration AND the initialization
-				await Promise.all([
-					Promise.race([dispatch(tryLocalSignIn()), timeoutPromise]),
-					minimumDurationPromise,
-				]);
+				await Promise.race([dispatch(tryLocalSignIn()), timeoutPromise]);
 
 				setIsInitialized(true);
 			} catch (error) {
 				console.log('Initialization error:', error);
-				// Still wait for minimum duration even if there's an error
-				await new Promise((resolve) =>
-					setTimeout(resolve, MINIMUM_SPLASH_DURATION)
-				);
-				setIsInitialized(true);
+
+				setIsInitialized(false);
 			}
 		};
 
@@ -60,7 +52,6 @@ const SplashScreen = () => {
 
 	return (
 		<View style={styles.container}>
-			<GatherAnimation />
 			<Image
 				source={require('../data/images/logo-transparent.png')}
 				style={styles.logo}

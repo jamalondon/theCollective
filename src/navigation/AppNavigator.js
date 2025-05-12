@@ -6,7 +6,8 @@ import Home from '../screens/HomeScreen';
 import Sermons from '../screens/SermonsScreen';
 import MeetTheTeam from '../screens/MeetTheTeamScreen';
 import CreateEventScreen from '../screens/CreateEvent';
-import EventDetailsScreen from '../screens/EventDetailsScreen.js';
+import EventDetailsScreen from '../screens/EventDetailsScreen';
+import PrayerRequestScreen from '../screens/PrayerRequestScreen';
 import CustomTabBar from '../components/customTabBar.js';
 
 const Tab = createBottomTabNavigator();
@@ -35,7 +36,7 @@ function TabNavigator() {
 					tabBarButton: () => null,
 				}}
 			/>
-			<Tab.Screen name="Reach Out" component={MeetTheTeam} />
+			<Tab.Screen name="Connect" component={MeetTheTeam} />
 			<Tab.Screen name="Profile" component={Profile} />
 		</Tab.Navigator>
 	);
@@ -51,6 +52,7 @@ export default function AppNavigator() {
 				headerShown: false,
 				presentation: 'modal',
 			}}
+			initialRouteName="Main"
 		>
 			<Stack.Screen name="Main" component={TabNavigator} />
 			<Stack.Screen
@@ -64,6 +66,14 @@ export default function AppNavigator() {
 			<Stack.Screen
 				name="EventDetails"
 				component={EventDetailsScreen}
+				options={{
+					presentation: 'modal',
+					animation: 'slide_from_bottom',
+				}}
+			/>
+			<Stack.Screen
+				name="PrayerRequest"
+				component={PrayerRequestScreen}
 				options={{
 					presentation: 'modal',
 					animation: 'slide_from_bottom',

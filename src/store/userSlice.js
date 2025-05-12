@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RootNavigation from '../navigation/navigationRef';
 
@@ -23,6 +23,7 @@ const userSlice = createSlice({
 			notifications: true,
 		},
 		dateOfBirth: '',
+		profilePicture: '',
 	},
 	reducers: {
 		// Actions that modify state
@@ -47,6 +48,7 @@ const userSlice = createSlice({
 			state.userID = action.payload.userID || '';
 			state.name = action.payload.name;
 			state.dateOfBirth = action.payload.dateOfBirth || '';
+			state.profilePicture = action.payload.profilePicture || '';
 			RootNavigation.navigate('App');
 		});
 		builder.addCase(signInUser.rejected, (state, action) => {
@@ -63,6 +65,7 @@ const userSlice = createSlice({
 			state.name = action.payload.name;
 			state.userID = action.payload.userID || '';
 			state.errorMessage = '';
+			state.profilePicture = action.payload.profilePicture || '';
 			RootNavigation.navigate('App');
 		});
 		builder.addCase(signUpUser.rejected, (state, action) => {
@@ -77,6 +80,7 @@ const userSlice = createSlice({
 			state.name = action.payload.name;
 			state.userID = action.payload.userID || '';
 			state.dateOfBirth = action.payload.dateOfBirth || '';
+			state.profilePicture = action.payload.profilePicture || '';
 		});
 		builder.addCase(tryLocalSignIn.rejected, (state) => {
 			// We don't set an error message here as this is a background operation

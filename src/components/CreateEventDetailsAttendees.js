@@ -49,7 +49,7 @@ const CreateEventDetailsAttendees = ({
 					]}
 					value={description}
 					onChangeText={setDescription}
-					placeholder="Tell people what this event is about..."
+					placeholder="Additional details about the event..."
 					placeholderTextColor="#999"
 					multiline
 					numberOfLines={4}

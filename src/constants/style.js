@@ -51,6 +51,11 @@ export const createStyles = (colors) => {
 			color: colors.text.primary,
 			letterSpacing: 0.3,
 		},
+		errorText: {
+			color: colors.primary,
+			fontSize: FONTS.sizes.sm,
+			textAlign: 'center',
+		},
 	});
 
 	const authStyles = StyleSheet.create({
@@ -210,6 +215,13 @@ export const createStyles = (colors) => {
 			...commonStyles.buttonText,
 			color: colors.background,
 		},
+		avatarIcon: {
+			width: 48,
+			height: 48,
+			borderRadius: 24,
+			justifyContent: 'center',
+			marginRight: SPACING.md,
+		},
 	});
 
 	const eventDetailStyles = StyleSheet.create({
@@ -230,20 +242,22 @@ export const createStyles = (colors) => {
 			padding: 20,
 			flex: 1,
 			width: '100%',
-			flexDirection: 'row',
+			flexDirection: 'column',
+			alignItems: 'center',
 		},
 		title: {
 			fontSize: 24,
 			fontWeight: 'bold',
-			marginBottom: 16,
 			color: colors.text.primary,
 			flexWrap: 'wrap',
+			textAlign: 'center',
+			marginTop: 16,
 		},
 		subtitle: {
 			fontSize: 14,
-			marginTop: 2,
 			fontStyle: 'italic',
 			color: colors.text.primary,
+			alignSelf: 'center',
 		},
 		hostInfo: {
 			flexDirection: 'row',
@@ -251,10 +265,11 @@ export const createStyles = (colors) => {
 			marginTop: 10,
 		},
 		hostImage: {
-			width: 40,
-			height: 40,
+			width: 120,
+			height: 120,
 			borderRadius: 20,
 			marginRight: 12,
+			alignSelf: 'center',
 		},
 		hostDetails: {
 			flex: 1,
@@ -412,8 +427,7 @@ export const createStyles = (colors) => {
 		plusButton: {
 			position: 'absolute',
 			top: -28,
-			left: '50%',
-			marginLeft: -28,
+			alignSelf: 'center',
 			width: 56,
 			height: 56,
 			borderRadius: 28,
@@ -430,24 +444,16 @@ export const createStyles = (colors) => {
 			shadowRadius: 8,
 			zIndex: 1000,
 		},
-		backdrop: {
-			position: 'absolute',
-			top: 0,
-			left: 0,
-			right: 0,
-			bottom: 0,
-			backgroundColor: 'transparent',
-		},
 		fabButton: {
 			position: 'absolute',
-			alignItems: 'center',
-			left: '50%',
-			marginLeft: -70, // Half of the total width (140)
+			justifyContent: 'center',
+			alignSelf: 'center',
 		},
 		subButton: {
 			backgroundColor: colors.primary,
-			width: 140,
-			height: 48,
+			width: 'auto',
+			height: 'auto',
+			padding: 12,
 			borderRadius: 24,
 			flexDirection: 'row',
 			alignItems: 'center',
@@ -772,6 +778,97 @@ export const createStyles = (colors) => {
 		},
 	});
 
+	const prayerRequestStyles = StyleSheet.create({
+		container: {
+			flex: 1,
+			backgroundColor: colors.background,
+		},
+		scrollContainer: {
+			flex: 1,
+			paddingHorizontal: SPACING.lg,
+			paddingTop: SPACING.md,
+		},
+		input: {
+			flex: 1,
+			minHeight: 80,
+			maxHeight: 180,
+			backgroundColor: colors.background,
+			borderRadius: SPACING.md,
+			padding: SPACING.md,
+			borderWidth: 1,
+			borderColor: colors.border.input,
+			fontSize: FONTS.sizes.md,
+			color: colors.text.primary,
+		},
+		characterCount: {
+			alignSelf: 'flex-end',
+			marginTop: 4,
+			marginRight: 4,
+			fontSize: FONTS.sizes.sm,
+			color: colors.text.secondary,
+		},
+		imageContainer: {
+			marginVertical: SPACING.md,
+			paddingLeft: 2,
+			minHeight: 70,
+		},
+		imageWrapper: {
+			marginRight: SPACING.md,
+			position: 'relative',
+		},
+		image: {
+			width: 150,
+			height: 150,
+			borderRadius: 12,
+			borderWidth: 1,
+			borderColor: colors.border.input,
+		},
+		removeImage: {
+			position: 'absolute',
+			top: 2,
+			right: 2,
+			backgroundColor: 'rgba(0,0,0,0.5)',
+			borderRadius: 10,
+			padding: 2,
+			zIndex: 2,
+		},
+		footer: {
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'space-between',
+			paddingHorizontal: SPACING.lg,
+			paddingVertical: SPACING.md,
+			backgroundColor: colors.background,
+			borderTopWidth: 1,
+			borderTopColor: colors.border.light,
+		},
+		imageButton: {
+			padding: SPACING.md,
+			borderRadius: 50,
+			backgroundColor: colors.background,
+			marginRight: SPACING.md,
+			borderWidth: 1,
+			borderColor: colors.border.input,
+		},
+		submitButton: {
+			flex: 1,
+			backgroundColor: colors.primary,
+			paddingVertical: SPACING.md,
+			borderRadius: SPACING.md,
+			alignItems: 'center',
+			justifyContent: 'center',
+			marginLeft: SPACING.md,
+		},
+		submitButtonDisabled: {
+			backgroundColor: colors.border.input,
+		},
+		submitButtonText: {
+			color: colors.background,
+			fontSize: FONTS.sizes.md,
+			fontWeight: FONTS.weights.semibold,
+		},
+	});
+
 	return {
 		commonStyles,
 		authStyles,
@@ -780,5 +877,6 @@ export const createStyles = (colors) => {
 		createEventStyles,
 		splashStyles,
 		eventDetailStyles,
+		prayerRequestStyles,
 	};
 };

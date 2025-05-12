@@ -12,7 +12,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomDatePicker from '../components/CustomDatePicker';
-import CustomTimePicker from '../components/CustomTimePicker';
 
 import CreateEventBasicInfo from '../components/CreateEventBasicInfo';
 import CreateEventLocationTime from '../components/CreateEventLocationTime';
@@ -303,13 +302,22 @@ const CreateEventScreen = ({ navigation }) => {
 				closeModal={() => setShowDatePicker(false)}
 				onSelectDate={handleDateSelect}
 				selectedDate={eventDate}
+				maximumDate={
+					new Date(new Date().setFullYear(new Date().getFullYear() + 2))
+				}
+				minimumDate={new Date()}
+				mode="date"
 			/>
 
-			<CustomTimePicker
+			<CustomDatePicker
 				visible={showTimePicker}
 				closeModal={() => setShowTimePicker(false)}
-				onSelectTime={handleTimeSelect}
-				selectedTime={eventDate}
+				onSelectDate={handleTimeSelect}
+				selectedDate={eventDate}
+				mode="time"
+				maximumDate={
+					new Date(new Date().setFullYear(new Date().getFullYear() + 2))
+				}
 			/>
 		</KeyboardAvoidingView>
 	);
