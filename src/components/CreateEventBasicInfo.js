@@ -2,39 +2,31 @@ import React from 'react';
 import { View, Text, TextInput, Animated } from 'react-native';
 import TagSelector from './TagSelector';
 import { useThemedStyles } from '../hooks/useThemedStyles';
+import HorizontalSectionSeparator from './HorizontalSectionSeparator';
 
 const CreateEventBasicInfo = ({
 	eventTitle,
 	setEventTitle,
 	selectedTags,
 	onTagPress,
-	nameError,
-	errorShakeAnim,
+	error,
+	userName,
 }) => {
 	const { createEventStyles } = useThemedStyles();
 	return (
 		<>
-			<Animated.View
-				style={[
-					createEventStyles.inputContainer,
-					{ transform: [{ translateX: errorShakeAnim }] },
-				]}
-			>
-				<Text style={createEventStyles.label}>Event Name</Text>
+			<Animated.View style={createEventStyles.inputContainer}>
 				<TextInput
 					style={[
 						createEventStyles.input,
-						nameError ? createEventStyles.inputError : null,
+						error ? createEventStyles.inputError : null,
 					]}
 					value={eventTitle}
 					onChangeText={setEventTitle}
-					placeholder="Enter event name"
+					placeholder={`${userName}'s Event (default)`}
 					placeholderTextColor="#999"
 					maxLength={30}
 				/>
-				{nameError ? (
-					<Text style={createEventStyles.errorText}>{nameError}</Text>
-				) : null}
 			</Animated.View>
 
 			<View style={createEventStyles.tagSection}>

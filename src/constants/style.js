@@ -36,6 +36,14 @@ export const createStyles = (colors) => {
 			fontSize: FONTS.sizes.md,
 			fontWeight: FONTS.weights.semibold,
 		},
+		errorText: {
+			color: colors.primary,
+			fontSize: FONTS.sizes.sm,
+			textAlign: 'center',
+		},
+		text: {
+			color: colors.text.primary,
+		},
 		container: {
 			flex: 1,
 			backgroundColor: colors.background,
@@ -45,16 +53,11 @@ export const createStyles = (colors) => {
 			alignItems: 'center',
 		},
 		label: {
-			fontSize: FONTS.sizes.sm,
+			fontSize: FONTS.sizes.lg,
 			marginBottom: SPACING.xs,
 			fontWeight: FONTS.weights.semibold,
 			color: colors.text.primary,
 			letterSpacing: 0.3,
-		},
-		errorText: {
-			color: colors.primary,
-			fontSize: FONTS.sizes.sm,
-			textAlign: 'center',
 		},
 	});
 
@@ -377,17 +380,15 @@ export const createStyles = (colors) => {
 			...commonStyles.shadowEffect,
 			backgroundColor: colors.background,
 			marginHorizontal: 20,
-			marginBottom: 35,
+			marginBottom: 30,
 			borderRadius: 25,
-			borderWidth: 1,
 			borderColor: colors.border.default,
 			position: 'absolute',
 			bottom: 0,
 			left: 0,
 			right: 0,
 			height: 70,
-			justifyContent: 'space-around',
-			paddingHorizontal: 10,
+			padding: 10,
 		},
 		tabButton: {
 			flex: 1,
@@ -407,7 +408,10 @@ export const createStyles = (colors) => {
 			marginBottom: 2,
 		},
 		activeIconContainer: {
-			backgroundColor: colors.primary,
+			backgroundColor: colors.text.primary,
+		},
+		inactiveIconContainer: {
+			backgroundColor: 'gray',
 		},
 		tabText: {
 			fontSize: 11,
@@ -418,36 +422,34 @@ export const createStyles = (colors) => {
 			marginTop: 2,
 		},
 		activeTabText: {
-			color: colors.primary,
+			color: colors.text.primary,
 			fontWeight: '600',
 		},
+
 		inactiveTabText: {
-			color: '#94A3B8',
+			color: colors.text.primary,
 		},
 		plusButton: {
 			position: 'absolute',
-			top: -28,
-			alignSelf: 'center',
-			width: 56,
-			height: 56,
-			borderRadius: 28,
-			backgroundColor: colors.primary,
-			justifyContent: 'center',
+			right: 4, // Adjust as needed for your design
+			bottom: 80, // Adjust to hover above the tab bar
+			zIndex: 10,
+			backgroundColor: colors.primary, // Or your preferred color
+			width: 60,
+			height: 60,
+			borderRadius: 30,
 			alignItems: 'center',
-			elevation: 8,
-			shadowColor: '#000',
-			shadowOffset: {
-				width: 0,
-				height: 4,
-			},
-			shadowOpacity: 0.25,
-			shadowRadius: 8,
-			zIndex: 1000,
+			justifyContent: 'center',
+			elevation: 5, // For Android shadow
+			shadowColor: '#000', // For iOS shadow
+			shadowOffset: { width: 0, height: 2 },
+			shadowOpacity: 0.3,
+			shadowRadius: 4,
 		},
 		fabButton: {
 			position: 'absolute',
-			justifyContent: 'center',
-			alignSelf: 'center',
+			alignSelf: 'flex-end',
+			bottom: 100,
 		},
 		subButton: {
 			backgroundColor: colors.primary,
@@ -479,10 +481,7 @@ export const createStyles = (colors) => {
 		mainContainer: {
 			...commonStyles.container,
 		},
-		subContainer: {
-			...commonStyles.container,
-			paddingHorizontal: SPACING.xl,
-		},
+
 		flex: {
 			flex: 1,
 		},
@@ -508,7 +507,9 @@ export const createStyles = (colors) => {
 			textAlign: 'center',
 		},
 		mainContent: {
-			flex: 1,
+			//flex: 1,
+			width: '100%',
+			paddingHorizontal: SPACING.lg,
 		},
 		title: {
 			fontSize: FONTS.sizes.xxl,
@@ -541,7 +542,7 @@ export const createStyles = (colors) => {
 			marginTop: SPACING.sm,
 		},
 		tagSection: {
-			marginTop: SPACING.xxl,
+			marginVertical: SPACING.xxxl,
 		},
 		tagHelper: {
 			fontSize: FONTS.sizes.sm,

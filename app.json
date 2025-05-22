@@ -1,31 +1,27 @@
 {
-  "expo": {
-    "name": "theCollective",
-    "slug": "thecollective",
-    "version": "1.0.0",
-    "newArchEnabled": true,
-    "extra": {
-      "eas": {
-        "projectId": "d7637a68-3704-4b84-a355-c39f8eb21e3d"
-      }
-    },
-    "owner": "jamalondon97",
-    "android": {
-      "package": "com.jamalondon97.thecollective"
-    },
-    "ios": {
-      "bundleIdentifier": "com.jamalondon97.thecollective"
-    },
-    "developmentClient": {
-      "silentLaunch": true
-    },
-    "developer": {
-      "tool": "expo-cli",
-      "hostType": "tunnel"
-    },
-    "runtimeVersion": "1.0.0",
-    "updates": {
-      "url": "https://u.expo.dev/d7637a68-3704-4b84-a355-c39f8eb21e3d"
-    }
-  }
+	"expo": {
+		"name": "theCollective",
+		"slug": "thecollective",
+		"version": "1.0.0",
+		"newArchEnabled": true,
+		"extra": {
+			"eas": {
+				"projectId": "d7637a68-3704-4b84-a355-c39f8eb21e3d"
+			}
+		},
+		"owner": "jamalondon97",
+		"android": {
+			"package": "com.OneCrossing.theCollective"
+		},
+		"ios": {
+			"bundleIdentifier": "com.OneCrossing.theCollective"
+		},
+		"developmentClient": {
+			"silentLaunch": true
+		},
+		"runtimeVersion": "1.0.0",
+		"updates": {
+			"url": "https://u.expo.dev/d7637a68-3704-4b84-a355-c39f8eb21e3d"
+		}
+	}
 }

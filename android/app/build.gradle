@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.jamalondon97.thecollective'
+    namespace 'com.OneCrossing.theCollective'
     defaultConfig {
-        applicationId 'com.jamalondon97.thecollective'
+        applicationId 'com.OneCrossing.theCollective'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

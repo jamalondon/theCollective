@@ -6,7 +6,7 @@ import {
 	TouchableOpacity,
 	Image,
 	ScrollView,
-	StyleSheet,
+	Alert,
 	Platform,
 	KeyboardAvoidingView,
 	Keyboard,
@@ -19,7 +19,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppTheme } from '../hooks/useAppTheme';
 import { useThemedStyles } from '../hooks/useThemedStyles';
 import { useSelector, useDispatch } from 'react-redux';
-import { createPrayerRequest } from '../store/prayerRequestThunk';
+import {
+	createPrayerRequest,
+	getPrayerRequests,
+} from '../store/prayerRequestThunk';
 
 const MAX_CHARACTERS = 500;
 
@@ -31,9 +34,10 @@ const PrayerRequest = ({ navigation }) => {
 	const scrollViewRef = useRef(null);
 
 	//hooks
-	const { appStyles, prayerRequestStyles } = useThemedStyles();
+	const { appStyles, prayerRequestStyles, commonStyles } = useThemedStyles();
 	const { colors } = useAppTheme();
 	const { profilePicture } = useSelector((state) => state.user);
+	const { error: errorRequest } = useSelector((state) => state.prayerRequests);
 	const dispatch = useDispatch();
 
 	// Safe area insets
@@ -88,18 +92,27 @@ const PrayerRequest = ({ navigation }) => {
 		setImages(newImages);
 	};
 
-	const submitPrayerRequest = () => {
-		//submit the prayer request to the Redux store
-		dispatch(
-			createPrayerRequest({
-				text: prayerText,
-				images,
-			})
-		);
-		// Reset form after submission
-		setPrayerText('');
-		setImages([]);
-		Keyboard.dismiss();
+	const submitPrayerRequest = async () => {
+		try {
+			await dispatch(
+				//submit the prayer request to the Redux store
+				createPrayerRequest({
+					text: prayerText,
+					images,
+				})
+			);
+			if (errorRequest) {
+				throw new Error(errorRequest);
+			}
+			await dispatch(getPrayerRequests());
+			// Reset form after submission
+			setPrayerText('');
+			setImages([]);
+			Keyboard.dismiss();
+			navigation.goBack();
+		} catch (error) {
+			Alert.alert('Error', error.message || 'Failed to submit prayer request');
+		}
 	};
 
 	const handleScroll = () => {

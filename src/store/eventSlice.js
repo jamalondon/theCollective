@@ -5,8 +5,8 @@ import {
 	getMyEvents,
 	getAttendingEvents,
 	createEvent,
-	updateEvent as updateEventThunk,
-	deleteEvent as deleteEventThunk,
+	updateEvent,
+	deleteEvent,
 	attendEvent,
 	cancelAttendance,
 	searchUsers,
@@ -46,6 +46,10 @@ const eventsSlice = createSlice({
 				searchTerm: '',
 				sortBy: 'date',
 			};
+		},
+		//clear search results
+		clearSearchResults: (state) => {
+			state.searchResults = [];
 		},
 		// Select a specific event for detailed view
 		selectEvent: (state, action) => {
@@ -119,7 +123,7 @@ const eventsSlice = createSlice({
 		});
 
 		// Update Event
-		builder.addCase(updateEventThunk.fulfilled, (state, action) => {
+		builder.addCase(updateEvent.fulfilled, (state, action) => {
 			const updatedEvent = action.payload;
 			state.allEvents = state.allEvents.map((event) =>
 				event.id === updatedEvent.id ? updatedEvent : event
@@ -136,7 +140,7 @@ const eventsSlice = createSlice({
 		});
 
 		// Delete Event
-		builder.addCase(deleteEventThunk.fulfilled, (state, action) => {
+		builder.addCase(deleteEvent.fulfilled, (state, action) => {
 			const deletedEventId = action.payload;
 			state.allEvents = state.allEvents.filter(
 				(event) => event.id !== deletedEventId
@@ -211,8 +215,12 @@ const eventsSlice = createSlice({
 });
 
 // Export actions
-export const { resetFilters, selectEvent, clearSelectedEvent } =
-	eventsSlice.actions;
+export const {
+	resetFilters,
+	selectEvent,
+	clearSelectedEvent,
+	clearSearchResults,
+} = eventsSlice.actions;
 
 // Export reducer
 export default eventsSlice.reducer;

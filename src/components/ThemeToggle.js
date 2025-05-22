@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppTheme } from '../hooks/useAppTheme';
-import { useThemedStyles } from '../hooks/useThemedStyles';
 
 const ThemeToggle = () => {
 	const { isDarkMode, toggleTheme, colors } = useAppTheme();

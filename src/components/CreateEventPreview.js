@@ -54,7 +54,7 @@ const CreateEventPreview = ({
 		eventTitle: {
 			fontSize: FONTS.sizes.xl,
 			fontWeight: FONTS.weights.bold,
-			color: colors.text.primary,
+			color: colors.text.dark,
 			marginBottom: SPACING.sm,
 		},
 		tagsContainer: {
@@ -71,7 +71,7 @@ const CreateEventPreview = ({
 			marginBottom: SPACING.xs,
 		},
 		tagText: {
-			color: colors.primary,
+			color: colors.text.primary,
 			fontSize: FONTS.sizes.sm,
 			fontWeight: FONTS.weights.medium,
 		},
@@ -83,12 +83,12 @@ const CreateEventPreview = ({
 		sectionTitle: {
 			fontSize: FONTS.sizes.lg,
 			fontWeight: FONTS.weights.semibold,
-			color: colors.text.primary,
+			color: colors.text.dark,
 			marginLeft: SPACING.sm,
 		},
 		dateText: {
 			fontSize: FONTS.sizes.md,
-			color: colors.text.primary,
+			color: colors.text.dark,
 			marginBottom: SPACING.xs,
 		},
 		timeText: {
@@ -97,11 +97,11 @@ const CreateEventPreview = ({
 		},
 		locationText: {
 			fontSize: FONTS.sizes.md,
-			color: colors.text.primary,
+			color: colors.text.dark,
 		},
 		descriptionText: {
 			fontSize: FONTS.sizes.md,
-			color: colors.text.primary,
+			color: colors.text.dark,
 			lineHeight: 24,
 		},
 		attendeesContainer: {
@@ -132,7 +132,7 @@ const CreateEventPreview = ({
 		attendeeName: {
 			fontSize: FONTS.sizes.md,
 			fontWeight: FONTS.weights.medium,
-			color: colors.text.primary,
+			color: colors.text.dark,
 		},
 		attendeeUsername: {
 			fontSize: FONTS.sizes.sm,

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, RefreshControl } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -16,7 +17,7 @@ const Home = ({ navigation }) => {
 	const dispatch = useDispatch();
 	const [refreshing, setRefreshing] = useState(false);
 	const [newsFeed, setNewsFeed] = useState([]);
-	const { appStyles } = useThemedStyles();
+	const { appStyles, commonStyles } = useThemedStyles();
 
 	// Get events from Redux store
 	const allEvents = useSelector((state) => state.events.allEvents);
@@ -35,14 +36,16 @@ const Home = ({ navigation }) => {
 		]);
 	};
 
-	//get inital data from server
-	useEffect(() => {
-		try {
-			fetchData();
-		} catch (error) {
-			console.error('Error fetching data:', error);
-		}
-	}, []);
+	//get data from server when the screen is focused
+	useFocusEffect(
+		React.useCallback(() => {
+			try {
+				fetchData();
+			} catch (error) {
+				console.error('Error fetching data:', error);
+			}
+		}, [])
+	);
 
 	// Combine events and prayer requests, then sort by creation date
 	const sortedNewsFeed = useMemo(() => {
@@ -52,12 +55,6 @@ const Home = ({ navigation }) => {
 
 		// Combine the two arrays
 		const combined = [...safeEvents, ...safePrayerRequests];
-
-		// Debug which date fields are being used
-		console.log('Sample items:', {
-			event: safeEvents.length ? safeEvents[0] : null,
-			prayer: safePrayerRequests.length ? safePrayerRequests[0] : null,
-		});
 
 		// Sort by created_at date
 		return combined.sort((a, b) => {
@@ -79,7 +76,6 @@ const Home = ({ navigation }) => {
 		});
 	}, [allEvents, prayerRequests]);
 
-	console.log(sortedNewsFeed);
 	// Handle refresh
 	const onRefresh = async () => {
 		setRefreshing(true);
@@ -93,7 +89,6 @@ const Home = ({ navigation }) => {
 
 	// Handle event press
 	const handleEventPress = (event) => {
-		//console.log(event.attendees);
 		// Navigate to event details screen
 		navigation.navigate('EventDetails', { eventID: event.id });
 	};
@@ -122,10 +117,12 @@ const Home = ({ navigation }) => {
 				data={sortedNewsFeed}
 				renderItem={({ item }) => (
 					<View>
-						<Text>{item.title}</Text>
+						<Text style={commonStyles.text}>{item.title}</Text>
 					</View>
 				)}
-				keyExtractor={(item) => item.id}
+				keyExtractor={(item, index) =>
+					item.id ? item.id.toString() : `missing-id-${index}`
+				}
 				refreshControl={
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}

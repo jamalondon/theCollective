@@ -35,6 +35,7 @@ function CustomTabBar({ state, descriptors, navigation }) {
 		opacity: animation,
 	};
 
+	//prayer button style
 	const prayerButtonStyle = {
 		transform: [
 			{ scale: animation },
@@ -62,7 +63,7 @@ function CustomTabBar({ state, descriptors, navigation }) {
 
 	const handleCreateEvent = () => {
 		toggleMenu();
-		navigation.getParent().navigate('CreateEvent');
+		navigation.navigate('CreateEvent');
 	};
 
 	return (
@@ -72,11 +73,6 @@ function CustomTabBar({ state, descriptors, navigation }) {
 					const { options } = descriptors[route.key];
 					const label = route.name;
 					const isFocused = state.index === index;
-
-					// Skip rendering if we're at the middle position
-					if (index === Math.floor(state.routes.length / 2)) {
-						return <View key={`placeholder-${index}`} style={{ width: 80 }} />;
-					}
 
 					const onPress = () => {
 						const event = navigation.emit({
@@ -100,6 +96,17 @@ function CustomTabBar({ state, descriptors, navigation }) {
 						/>
 					);
 				})}
+
+				{/* Plus Button */}
+				<TouchableOpacity
+					style={tabBarStyles.plusButton}
+					onPress={toggleMenu}
+					activeOpacity={0.8}
+				>
+					<Animated.View style={rotateStyle}>
+						<Icon.IoniconsIcon name="add" size={30} color="white" />
+					</Animated.View>
+				</TouchableOpacity>
 			</View>
 
 			{/* Sub FABs */}
@@ -125,17 +132,6 @@ function CustomTabBar({ state, descriptors, navigation }) {
 					<Text style={tabBarStyles.subButtonText}>Prayer Request</Text>
 				</TouchableOpacity>
 			</Animated.View>
-
-			{/* Main FAB */}
-			<TouchableOpacity
-				style={tabBarStyles.plusButton}
-				onPress={toggleMenu}
-				activeOpacity={0.8}
-			>
-				<Animated.View style={rotateStyle}>
-					<Icon.IoniconsIcon name="add" size={30} color="white" />
-				</Animated.View>
-			</TouchableOpacity>
 		</View>
 	);
 }

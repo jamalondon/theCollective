@@ -7,9 +7,11 @@ const HorizontalLineSeperator = ({ text }) => {
 
 	return text ? (
 		<View style={styles.container}>
-			{horizontalLabelLine(colors.text.primary)}
-			<Text style={[styles.text, { color: colors.text.primary }]}>{text}</Text>
-			{horizontalLabelLine(colors.text.primary)}
+			{horizontalLabelLine(colors.text.secondary)}
+			<Text style={[styles.text, { color: colors.text.secondary }]}>
+				{text}
+			</Text>
+			{horizontalLabelLine(colors.text.secondary)}
 		</View>
 	) : (
 		<View style={styles.container}>{horizontalLabelLine()}</View>

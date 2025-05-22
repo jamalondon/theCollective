@@ -4,10 +4,10 @@ import {
 	Text,
 	TouchableOpacity,
 	ScrollView,
-	Platform,
 	KeyboardAvoidingView,
 	Animated,
 	Alert,
+	Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,17 +28,17 @@ const popularLocations = [
 
 const CreateEventScreen = ({ navigation }) => {
 	const dispatch = useDispatch();
-	const { loading, error } = useSelector((state) => state.events);
+	const { loading } = useSelector((state) => state.events);
+	const { name: userName } = useSelector((state) => state.user);
 	const insets = useSafeAreaInsets();
 	const [currentStep, setCurrentStep] = useState(1);
 	const [eventTitle, setEventTitle] = useState('');
 	const [selectedTags, setSelectedTags] = useState([]);
-	const [nameError, setNameError] = useState('');
+	const [error, setError] = useState('');
 	const [eventDate, setEventDate] = useState(new Date());
 	const [eventLocation, setEventLocation] = useState('');
 	const [eventDescription, setEventDescription] = useState('');
 	const [attendees, setAttendees] = useState([]);
-	const [searchQuery, setSearchQuery] = useState('');
 	const { createEventStyles, authStyles } = useThemedStyles();
 
 	// State for modal visibility
@@ -108,33 +108,20 @@ const CreateEventScreen = ({ navigation }) => {
 
 	const validateAndProceed = () => {
 		if (currentStep === 1) {
-			if (!eventTitle.trim() || selectedTags.length === 0) {
-				shakeError();
-				setNameError(
-					!eventTitle.trim()
-						? 'Please enter an event name'
-						: 'Please select at least one tag'
+			if (
+				!eventTitle.trim() ||
+				!eventLocation.trim() ||
+				!eventDescription.trim()
+			) {
+				Alert.alert(
+					'Information Required',
+					'Please fill out all information to create the event!'
 				);
 				return;
 			}
-			setNameError('');
+			setError('');
 			setCurrentStep(2);
 		} else if (currentStep === 2) {
-			if (!eventLocation.trim()) {
-				shakeError();
-				setNameError('Please enter a location');
-				return;
-			}
-			setNameError('');
-			setCurrentStep(3);
-		} else if (currentStep === 3) {
-			if (!eventDescription.trim()) {
-				shakeError();
-				setNameError('Please enter an event description');
-				return;
-			}
-			setNameError('');
-			setCurrentStep(4);
 		} else {
 			handleCreateEvent();
 		}
@@ -148,39 +135,8 @@ const CreateEventScreen = ({ navigation }) => {
 		}
 	};
 
-	const getStepTitle = () => {
-		switch (currentStep) {
-			case 1:
-				return 'Create New Event';
-			case 2:
-				return 'When & Where';
-			case 3:
-				return 'What & Who';
-			case 4:
-				return 'Preview Event';
-			default:
-				return '';
-		}
-	};
-
-	const getStepSubtitle = () => {
-		switch (currentStep) {
-			case 1:
-				return "Let's start with the basics";
-			case 2:
-				return 'Set your event location and time';
-			case 3:
-				return 'Add description and invite people';
-			case 4:
-				return 'Review your event details';
-			default:
-				return '';
-		}
-	};
-
 	return (
 		<KeyboardAvoidingView
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			style={[
 				createEventStyles.mainContainer,
 				{
@@ -190,6 +146,7 @@ const CreateEventScreen = ({ navigation }) => {
 					paddingRight: insets.right,
 				},
 			]}
+			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 		>
 			{/* Progress Indicator */}
 			<View style={createEventStyles.progressContainer}>
@@ -199,38 +156,40 @@ const CreateEventScreen = ({ navigation }) => {
 							createEventStyles.progressFill,
 							{
 								width: progressAnim.interpolate({
-									inputRange: [0.25, 0.5, 0.75, 1],
-									outputRange: ['25%', '50%', '75%', '100%'],
+									inputRange: [0.5, 1],
+									outputRange: ['50%', '100%'],
 								}),
 							},
 						]}
 					/>
 				</View>
-				<Text style={createEventStyles.stepText}>Step {currentStep} of 4</Text>
 			</View>
 
+			{/* Main Content */}
 			<ScrollView
-				style={createEventStyles.subContainer}
+				style={[createEventStyles.mainContent, { width: '100%' }]}
 				showsVerticalScrollIndicator={false}
 			>
-				{/* Main Content */}
-				<View style={createEventStyles.mainContent}>
-					<Text style={createEventStyles.title}>{getStepTitle()}</Text>
-					<Text style={createEventStyles.subtitle}>{getStepSubtitle()}</Text>
-
-					{currentStep === 1 ? (
+				{currentStep === 1 ? (
+					<>
+						<Text style={createEventStyles.title}>{'Create New Event'}</Text>
+						<Text style={createEventStyles.subtitle}>
+							{"Let's start with the basics"}
+						</Text>
 						<CreateEventBasicInfo
 							eventTitle={eventTitle}
 							setEventTitle={setEventTitle}
 							selectedTags={selectedTags}
 							onTagPress={handleTagPress}
-							nameError={nameError}
+							error={error}
 							errorShakeAnim={errorShakeAnim}
+							userName={userName}
 						/>
-					) : currentStep === 2 ? (
+						<Text style={createEventStyles.title}>{'When & Where'}</Text>
+						<Text style={createEventStyles.subtitle}>
+							{'Set your event location and time'}
+						</Text>
 						<CreateEventLocationTime
-							searchQuery={searchQuery}
-							setSearchQuery={setSearchQuery}
 							eventLocation={eventLocation}
 							setEventLocation={setEventLocation}
 							eventDate={eventDate}
@@ -238,65 +197,66 @@ const CreateEventScreen = ({ navigation }) => {
 							onTimePress={() => setShowTimePicker(true)}
 							popularLocations={popularLocations}
 							errorShakeAnim={errorShakeAnim}
-							nameError={nameError}
+							error={error}
 						/>
-					) : currentStep === 3 ? (
+						<Text style={createEventStyles.title}>{'What & Who'}</Text>
+						<Text style={createEventStyles.subtitle}>
+							{'Add description and invite people'}
+						</Text>
 						<CreateEventDetailsAttendees
 							description={eventDescription}
 							setDescription={setEventDescription}
 							attendees={attendees}
 							setAttendees={setAttendees}
-							searchQuery={searchQuery}
-							setSearchQuery={setSearchQuery}
-							nameError={nameError}
+							error={error}
 							errorShakeAnim={errorShakeAnim}
 						/>
-					) : (
-						<CreateEventPreview
-							eventTitle={eventTitle}
-							selectedTags={selectedTags}
-							eventDate={eventDate}
-							eventLocation={eventLocation}
-							eventDescription={eventDescription}
-							attendees={attendees}
-						/>
-					)}
-				</View>
+					</>
+				) : currentStep === 2 ? (
+					<CreateEventPreview
+						eventTitle={eventTitle}
+						selectedTags={selectedTags}
+						eventDate={eventDate}
+						eventLocation={eventLocation}
+						eventDescription={eventDescription}
+						attendees={attendees}
+					/>
+				) : null}
+			</ScrollView>
 
-				{/* Bottom Buttons */}
-				<View style={createEventStyles.buttonContainer}>
+			{/* Bottom Buttons */}
+			<View style={createEventStyles.buttonContainer}>
+				<TouchableOpacity
+					style={createEventStyles.backButton}
+					onPress={handleBack}
+					activeOpacity={0.7}
+				>
+					<Text style={createEventStyles.backButtonText}>
+						{currentStep === 1 ? 'Cancel' : 'Back'}
+					</Text>
+				</TouchableOpacity>
+				<Animated.View
+					style={[
+						createEventStyles.nextButtonContainer,
+						{ transform: [{ scale: buttonScaleAnim }] },
+					]}
+				>
 					<TouchableOpacity
-						style={createEventStyles.backButton}
-						onPress={handleBack}
-						activeOpacity={0.7}
+						style={[
+							createEventStyles.nextButton,
+							currentStep === 4 && createEventStyles.createButton,
+						]}
+						activeOpacity={1}
+						onPressIn={handleButtonPressIn}
+						onPressOut={handleButtonPressOut}
+						onPress={validateAndProceed}
 					>
-						<Text style={createEventStyles.backButtonText}>
-							{currentStep === 1 ? 'Cancel' : 'Back'}
+						<Text style={createEventStyles.nextButtonText}>
+							{currentStep === 4 ? 'Create Event' : 'Next'}
 						</Text>
 					</TouchableOpacity>
-					<Animated.View
-						style={[
-							createEventStyles.nextButtonContainer,
-							{ transform: [{ scale: buttonScaleAnim }] },
-						]}
-					>
-						<TouchableOpacity
-							style={[
-								createEventStyles.nextButton,
-								currentStep === 4 && createEventStyles.createButton,
-							]}
-							activeOpacity={1}
-							onPressIn={handleButtonPressIn}
-							onPressOut={handleButtonPressOut}
-							onPress={validateAndProceed}
-						>
-							<Text style={createEventStyles.nextButtonText}>
-								{currentStep === 4 ? 'Create Event' : 'Next'}
-							</Text>
-						</TouchableOpacity>
-					</Animated.View>
-				</View>
-			</ScrollView>
+				</Animated.View>
+			</View>
 			<CustomDatePicker
 				visible={showDatePicker}
 				closeModal={() => setShowDatePicker(false)}

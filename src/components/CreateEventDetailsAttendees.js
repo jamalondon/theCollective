@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	View,
 	Text,
@@ -9,25 +9,38 @@ import {
 	ActivityIndicator,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { searchUsers } from '../store/eventThunk';
+import { clearSearchResults } from '../store/eventSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemedStyles } from '../hooks/useThemedStyles';
-import { searchUsers } from '../store/eventThunk';
 
 const CreateEventDetailsAttendees = ({
 	description,
 	setDescription,
 	attendees,
 	setAttendees,
-	searchQuery,
-	setSearchQuery,
-	nameError,
-	errorShakeAnim,
+	error,
 }) => {
 	const { createEventStyles } = useThemedStyles();
+	const [searchQuery, setSearchQuery] = useState('');
+
 	const dispatch = useDispatch();
-	const { searchResults: userSearchResults, loading } = useSelector(
-		(state) => state.events
-	);
+	const { searchResults, isLoading } = useSelector((state) => state.events);
+
+	// Search function
+	const handleSearchUsers = async (query) => {
+		//validation
+		if (query.length < 1) {
+			dispatch(clearSearchResults());
+			return;
+		}
+		try {
+			// Call your API endpoint
+			await dispatch(searchUsers(query));
+		} catch (error) {
+			console.error('Error searching users:', error);
+		}
+	};
 
 	const removeAttendee = (userId) => {
 		setAttendees(attendees.filter((attendee) => attendee.id !== userId));
@@ -35,17 +48,11 @@ const CreateEventDetailsAttendees = ({
 
 	return (
 		<>
-			<Animated.View
-				style={[
-					createEventStyles.descriptionContainer,
-					{ transform: [{ translateX: errorShakeAnim }] },
-				]}
-			>
-				<Text style={createEventStyles.label}>Event Description</Text>
+			<Animated.View style={createEventStyles.descriptionContainer}>
 				<TextInput
 					style={[
 						createEventStyles.descriptionInput,
-						nameError && !description ? createEventStyles.inputError : null,
+						error && !description ? createEventStyles.inputError : null,
 					]}
 					value={description}
 					onChangeText={setDescription}
@@ -55,9 +62,6 @@ const CreateEventDetailsAttendees = ({
 					numberOfLines={4}
 					textAlignVertical="top"
 				/>
-				{nameError && !description ? (
-					<Text style={createEventStyles.errorText}>{nameError}</Text>
-				) : null}
 			</Animated.View>
 
 			<View style={createEventStyles.attendeesSection}>
@@ -73,14 +77,20 @@ const CreateEventDetailsAttendees = ({
 						<TextInput
 							style={createEventStyles.searchInput}
 							value={searchQuery}
-							onChangeText={setSearchQuery}
+							onChangeText={(text) => {
+								handleSearchUsers(text);
+								setSearchQuery(text);
+							}}
 							placeholder="Search for people"
 							placeholderTextColor="#999"
 						/>
 						{searchQuery ? (
 							<TouchableOpacity
 								style={createEventStyles.clearButton}
-								onPress={() => setSearchQuery('')}
+								onPress={() => {
+									setSearchQuery('');
+									dispatch(clearSearchResults());
+								}}
 							>
 								<Ionicons name="close-circle" size={20} color="#666" />
 							</TouchableOpacity>
@@ -120,10 +130,10 @@ const CreateEventDetailsAttendees = ({
 					<Text style={createEventStyles.subLabel}>
 						{searchQuery ? 'Search Results' : 'Suggested'}
 					</Text>
-					{loading ? (
+					{isLoading ? (
 						<ActivityIndicator style={createEventStyles.loader} color="#666" />
 					) : (
-						(searchQuery ? userSearchResults : [])
+						searchResults
 							.filter(
 								(user) => !attendees.some((attendee) => attendee.id === user.id)
 							)

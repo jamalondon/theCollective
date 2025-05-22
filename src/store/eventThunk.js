@@ -187,6 +187,7 @@ export const deleteEvent = createAsyncThunk(
 export const searchUsers = createAsyncThunk(
 	'events/searchUsers',
 	async (searchQuery, { rejectWithValue, getState }) => {
+		console.log('searchQuery', searchQuery);
 		try {
 			const { user } = getState();
 			const token = user.token;

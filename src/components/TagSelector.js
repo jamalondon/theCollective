@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
 	container: {
 		paddingVertical: 10,
 		paddingHorizontal: 5,
+		marginHorizontal: 10,
 	},
 	tag: {
 		paddingHorizontal: 20,

@@ -1,11 +1,11 @@
 import { Dimensions } from 'react-native';
 
 export const LIGHT_COLORS = {
-	primary: '#FF6B6B',
-	background: '#ffffff',
+	primary: 'rgb(255, 107, 107)',
+	background: 'rgb(255, 255, 255)',
 	surface: '#f8f9fa',
 	text: {
-		primary: '#333333',
+		primary: 'rgba(0, 0, 0, 1)',
 		secondary: '#868e96',
 		light: '#999999',
 	},
@@ -23,13 +23,13 @@ export const LIGHT_COLORS = {
 };
 
 export const DARK_COLORS = {
-	primary: '#FF6B6B',
+	primary: 'rgb(255, 107, 107)',
 	background: 'rgba(0, 0, 0, 1)',
 	surface: '#1E1E1E',
 	text: {
-		primary: '#E1E1E1',
+		primary: 'rgb(255, 255, 255)',
 		secondary: '#B0B0B0',
-		light: '#808080',
+		dark: 'rgba(0, 0, 0, 1)',
 	},
 	border: {
 		default: '#2D2D2D',

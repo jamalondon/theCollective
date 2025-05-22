@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	View,
 	Text,
@@ -13,8 +13,6 @@ import { useThemedStyles } from '../hooks/useThemedStyles';
 import { searchLocations } from '../store/eventThunk';
 
 const CreateEventLocationTime = ({
-	searchQuery,
-	setSearchQuery,
 	eventLocation,
 	setEventLocation,
 	eventDate,
@@ -25,6 +23,8 @@ const CreateEventLocationTime = ({
 	nameError,
 }) => {
 	const { createEventStyles } = useThemedStyles();
+	const [searchQuery, setSearchQuery] = useState('');
+
 	const dispatch = useDispatch();
 	const { searchResults, loading } = useSelector((state) => state.events);
 

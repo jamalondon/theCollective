@@ -35,16 +35,15 @@ function TabButton({
 			style={tabBarStyles.tabButton}
 		>
 			<View style={tabBarStyles.tabItem}>
-				<View
-					style={[
-						tabBarStyles.iconContainer,
-						isFocused ? tabBarStyles.activeIconContainer : null,
-					]}
-				>
+				<View style={[tabBarStyles.iconContainer]}>
 					<Icon.IoniconsIcon
 						name={iconName}
 						size={30}
-						color={isFocused ? 'white' : '#AAAAAA'}
+						color={
+							isFocused
+								? tabBarStyles.activeIconContainer.backgroundColor
+								: tabBarStyles.inactiveIconContainer.backgroundColor
+						}
 					/>
 				</View>
 				<Text
