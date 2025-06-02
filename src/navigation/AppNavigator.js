@@ -27,10 +27,9 @@ function TabNavigator() {
 				},
 			}}
 		>
+			<Tab.Screen name="Home" component={Home} />
+
 			<Tab.Screen name="Sermons" component={Sermons} />
-
-			<Tab.Screen name="Home" component={Home} options={{ title: 'Home' }} />
-
 			<Tab.Screen name="Connect" component={MeetTheTeam} />
 			<Tab.Screen name="Profile" component={Profile} />
 		</Tab.Navigator>

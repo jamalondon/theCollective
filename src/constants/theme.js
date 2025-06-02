@@ -3,7 +3,7 @@ import { Dimensions } from 'react-native';
 export const LIGHT_COLORS = {
 	primary: 'rgb(255, 107, 107)',
 	background: 'rgb(255, 255, 255)',
-	surface: '#f8f9fa',
+	surface: 'rgb(240,240,240)',
 	text: {
 		primary: 'rgba(0, 0, 0, 1)',
 		secondary: '#868e96',
@@ -25,7 +25,7 @@ export const LIGHT_COLORS = {
 export const DARK_COLORS = {
 	primary: 'rgb(255, 107, 107)',
 	background: 'rgba(0, 0, 0, 1)',
-	surface: '#1E1E1E',
+	surface: 'rgb(30, 30, 30)',
 	text: {
 		primary: 'rgb(255, 255, 255)',
 		secondary: '#B0B0B0',

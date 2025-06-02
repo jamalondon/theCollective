@@ -11,6 +11,7 @@ import {
 import { getPrayerRequests } from '../store/prayerRequestThunk';
 //import EventCard from '../components/EventCard';
 import { useThemedStyles } from '../hooks/useThemedStyles';
+import Post from '../components/Post';
 
 const Home = ({ navigation }) => {
 	const insets = useSafeAreaInsets();
@@ -50,11 +51,21 @@ const Home = ({ navigation }) => {
 	// Combine events and prayer requests, then sort by creation date
 	const sortedNewsFeed = useMemo(() => {
 		// First, make sure both arrays exist
-		const safeEvents = allEvents || [];
-		const safePrayerRequests = prayerRequests || [];
+		const Events = allEvents || [];
+		const PrayerRequests = prayerRequests || [];
+
+		// Add post "type" field to each item tag
+		const modifiedEvents = Events.map((event) => ({
+			...event,
+			tags: [...event.tags, 'Event'],
+		}));
+		const modifiedPrayerRequests = PrayerRequests.map((pr) => ({
+			...pr,
+			tags: ['Prayer Request'],
+		}));
 
 		// Combine the two arrays
-		const combined = [...safeEvents, ...safePrayerRequests];
+		const combined = [...modifiedEvents, ...modifiedPrayerRequests];
 
 		// Sort by created_at date
 		return combined.sort((a, b) => {
@@ -115,11 +126,7 @@ const Home = ({ navigation }) => {
 		>
 			<FlatList
 				data={sortedNewsFeed}
-				renderItem={({ item }) => (
-					<View>
-						<Text style={commonStyles.text}>{item.title}</Text>
-					</View>
-				)}
+				renderItem={({ item }) => <Post item={item} />}
 				keyExtractor={(item, index) =>
 					item.id ? item.id.toString() : `missing-id-${index}`
 				}
@@ -127,7 +134,10 @@ const Home = ({ navigation }) => {
 					<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
 				}
 				ListEmptyComponent={renderEmptyState}
-				contentContainerStyle={styles.listContent}
+				contentContainerStyle={[
+					styles.listContent,
+					{ paddingBottom: insets.bottom + 30 },
+				]}
 			/>
 		</View>
 	);

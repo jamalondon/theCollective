@@ -23,7 +23,7 @@ const AnimatedTag = ({ tag, isSelected, onPress }) => {
 
 	const handlePressIn = () => {
 		Animated.spring(scaleAnim, {
-			toValue: 0.95,
+			toValue: 0.75,
 			useNativeDriver: true,
 		}).start();
 	};
@@ -70,8 +70,8 @@ const TagSelector = ({ selectedTags, onTagPress }) => {
 				<AnimatedTag
 					key={tag.id}
 					tag={tag}
-					isSelected={selectedTags.includes(tag.id)}
-					onPress={() => onTagPress(tag.id)}
+					isSelected={selectedTags.includes(tag.label)}
+					onPress={() => onTagPress(tag.label)}
 				/>
 			))}
 		</ScrollView>

@@ -61,12 +61,11 @@ const CreateEventScreen = ({ navigation }) => {
 		animateProgress(currentStep);
 	}, [currentStep]);
 
-	const handleTagPress = (tagId) => {
-		console.log('tagId', tagId);
+	const handleTagPress = (tagLabel) => {
 		setSelectedTags((prevTags) =>
-			prevTags.includes(tagId)
-				? prevTags.filter((id) => id !== tagId)
-				: [...prevTags, tagId]
+			prevTags.includes(tagLabel)
+				? prevTags.filter((label) => label !== tagLabel)
+				: [...prevTags, tagLabel]
 		);
 	};
 
@@ -122,7 +121,6 @@ const CreateEventScreen = ({ navigation }) => {
 			setError('');
 			setCurrentStep(2);
 		} else if (currentStep === 2) {
-		} else {
 			handleCreateEvent();
 		}
 	};

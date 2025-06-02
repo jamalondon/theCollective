@@ -870,6 +870,49 @@ export const createStyles = (colors) => {
 		},
 	});
 
+	const postStyles = StyleSheet.create({
+		container: {
+			...commonStyles.container,
+			backgroundColor: colors.surface,
+			overflow: 'hidden',
+			borderRadius: 10,
+			borderWidth: 1,
+			borderColor: colors.border.default,
+			marginBottom: SPACING.sm,
+			padding: SPACING.md,
+		},
+		text: {
+			...commonStyles.text,
+		},
+		tagsContainer: {
+			...commonStyles.flexRow,
+			gap: SPACING.sm,
+			marginTop: SPACING.sm,
+		},
+		tag: {
+			...commonStyles.text,
+			backgroundColor: colors.text.secondary,
+			borderRadius: SPACING.sm,
+			padding: SPACING.xs,
+			fontSize: FONTS.sizes.sm,
+		},
+		headerContainer: {
+			...commonStyles.flexRow,
+			gap: SPACING.sm,
+		},
+		headerText: {
+			...commonStyles.text,
+			fontSize: FONTS.sizes.md,
+		},
+		titleText: {
+			...commonStyles.text,
+			fontWeight: FONTS.weights.bold,
+			alignSelf: 'center',
+			marginVertical: 10,
+			fontSize: '16',
+		},
+	});
+
 	return {
 		commonStyles,
 		authStyles,
@@ -879,5 +922,6 @@ export const createStyles = (colors) => {
 		splashStyles,
 		eventDetailStyles,
 		prayerRequestStyles,
+		postStyles,
 	};
 };

@@ -1,7 +1,8 @@
 {
     "attendees": [
         {
-            "user": [object]
+            "user": [object
+            ]
         }
     ],
     "created_at": "2025-04-24T21:35:08.957898+00:00",
@@ -20,3 +21,43 @@
     "updated_at": "2025-04-24T21:35:08.957898+00:00"
 }
 
+{
+    "comments": [],
+    "created_at": "2025-05-16T14:13:35.431867+00:00",
+    "id": "9843d34d-e482-4c92-bd21-2b8339d31179",
+    "owner": {
+        "id": "18e2ce12-e1fc-4e8d-9471-f3066d754d47",
+        "name": "Bryson-User2",
+        "profile_picture": "https://txhcdlryeetwzdqjrbfo.supabase.co/storage/v1/object/public/defaults/default_profile_pic.jpg"
+    },
+    "photos": [],
+    "tags": [
+        "Prayer Request"
+    ],
+    "text": "Prayer 1",
+    "title": "Pray for Bryson-User2"
+}
+{
+    "attendees": [
+        {
+            "user": [Object
+            ]
+        }
+    ],
+    "created_at": "2025-05-14T15:57:00+00:00",
+    "date": "2024-06-10T15:00:00+00:00",
+    "description": "Deep dive into state management and performance optimization strategies for complex React applications. This 2-hour technical webinar will explore advanced hooks usage, context API best practices, state management libraries comparison (Redux vs MobX vs Recoil), code splitting techniques, lazy loading implementation, memoization strategies, and effective component composition patterns. The session will include live coding demonstrations, optimization benchmarks, and practical tips for refactoring existing applications. Attendees will receive access to code repositories, reference materials, and a recording of the webinar. Some experience with React is recommended to get the most value from this advanced session.",
+    "id": "2d79cec6-971c-41f2-ab7c-f8b95d01ff85",
+    "location": "Online - Zoom",
+    "owner": {
+        "email": "b97@gmail.com",
+        "id": "afdcde7b-8f4d-4730-a485-2ad710895366",
+        "name": "Test User",
+        "profile_picture": "https://txhcdlryeetwzdqjrbfo.supabase.co/storage/v1/object/public/defaults/default_profile_pic.jpg"
+    },
+    "tags": [
+        "Event"
+    ],
+    "title": "React.js Advanced Techniques Webinar",
+    "updated_at": "2025-04-24T00:22:39.048848+00:00"
+}
